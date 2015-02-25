@@ -1,0 +1,62 @@
+<header class="gc registerapp header">Регистрация нового приложения</header>
+<p style="font-size: 1.6rem">Чтобы в полную меру использовать мощь нашего <a href="/api">API</a>, иметь доступ к приватным частям онного, вам потребуется регистрация вашего приложения в системе. Ниже вы можете оставить заявку.</p>
+<div class="ui segment">
+	<form id="gc-registerform">
+		<div class="ui form">
+			<div class="ui error message">
+				<div class="header">Ошибка!</div>
+				<p id="errormessage"></p>
+			</div>
+			<div class="field">
+				<label>Название приложения</label>
+				<input placeholder="42GC" type="text" name="name">
+			</div>
+			<div class="field">
+				<label>Краткое описание</label>
+				<input placeholder="Сокращалка ссылок" type="text" name="description">
+			</div>
+			<div class="field">
+				<label>Домашняя страница</label>
+				<input placeholder="http://42gc.ru" type="text" name="homeURI">
+			</div>
+			<div class="field">
+				<label>Callback (redirectURI)</label>
+				<input placeholder="http://42gc.ru/oauth2/callback" type="text" name="redirectURI">
+			</div>
+			<div class="grouped fields">
+				<label>Права доступа</label>
+				<div class="field">
+					<div class="ui checkbox checked">
+						<input name="profile" type="checkbox">
+						<label>Профиль</label>
+					</div>
+				</div>
+				<div class="field">
+					<div class="ui checkbox">
+						<input name="email" type="checkbox">
+						<label>Электронная почта</label>
+					</div>
+				</div>
+				<div class="field">
+					<div class="ui checkbox">
+						<input name="regions" type="checkbox">
+						<label>Список регионов</label>
+					</div>
+				</div>
+			</div>
+			<div class="field">
+				<label>Подробное описание приложения (обоснование использования API, это не публикуется где-либо)</label>
+				<textarea name="message"></textarea>
+			</div>
+			<div class="ui divider"></div>
+			<div class="field">
+				<div class="ui checkbox">
+					<input name="tos" type="checkbox">
+					<label>Я соглашаюсь с фактом того, что администрация вправе отозвать регистрацию приложения без объяснения причин.</label>
+				</div>
+			</div>
+			<div class="ui primary big button" id="gc-registerbutton">Отправить</div>
+			<input type="hidden" name="_csrf" value="<%= _csrf %>" />
+		</div>
+	</form>
+</div>

@@ -1,0 +1,65 @@
+<div class="ui modal" id="gc-editrequestmodal">
+	<i class="close icon"></i>
+	<div class="header">
+		Редактирование #<span id="er-id"></span>: &laquo;<span id="er-name"></span>&raquo;
+	</div>
+	<div class="content" style="overflow-y:auto;display:block;margin-bottom:1rem;">
+		<form>
+			<div class="ui form">
+				<div class="ui error message">
+					<div class="header">Ошибка!</div>
+					<p id="errormessage"></p>
+				</div>
+				<div class="field">
+					<label>Название приложения</label>
+					<input placeholder="42GC" type="text" name="name">
+				</div>
+				<div class="field">
+					<label>Краткое описание</label>
+					<input placeholder="Сокращалка ссылок" type="text" name="description">
+				</div>
+				<div class="field">
+					<label>Домашняя страница</label>
+					<input placeholder="http://42gc.ru" type="text" name="homeURI">
+				</div>
+				<div class="field">
+					<label>Callback</label>
+					<input placeholder="http://42gc.ru/oauth2/callback" type="text" name="redirectURI">
+				</div>
+				<div class="grouped fields">
+					<label>Права доступа</label>
+					<div class="field">
+						<div class="ui checkbox checked">
+							<input name="profile" type="checkbox">
+							<label>Профиль</label>
+						</div>
+					</div>
+					<div class="field">
+						<div class="ui checkbox">
+							<input name="email" type="checkbox">
+							<label>Электронная почта</label>
+						</div>
+					</div>
+					<div class="field">
+						<div class="ui checkbox">
+							<input name="regions" type="checkbox">
+							<label>Список регионов</label>
+						</div>
+					</div>
+				</div>
+				<div class="field">
+					<label>Подробное описание приложения</label>
+					<textarea name="message"></textarea>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="actions">
+		<div class="ui black button">
+			Отмена
+		</div>
+		<div class="ui positive right labeled icon button">
+			<i class="checkmark icon"></i> Отправить
+		</div>
+	</div>
+</div>

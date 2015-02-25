@@ -35,9 +35,42 @@ var generateUID = function(len) {
   return buf.join('');
 };
 
+function serializeRequestStatus(id) {
+	switch (id) {
+		case 0:
+			return {
+				id: 0,
+				class: 'blue',
+				name: 'На рассмотрении'
+			};
+
+		case 1:
+			return {
+				id: 1,
+				class: 'green',
+				name: 'Принят'
+			};
+
+		case 2:
+			return {
+				id: 2,
+				class: 'red',
+				name: 'Отклонён'
+			};
+
+		default:
+			return {
+				id: -1,
+				class: '',
+				name: ''
+			};
+	}
+};
+
 module.exports = {
+
 	/* GET /apps */
-	listApps: function (req, res) {
+	list: function (req, res) {
 		var apps = [],
 			requests = [];
 
@@ -66,7 +99,7 @@ module.exports = {
 			},
 			function getRequests(apps, callback) {
 				if (req.user.staff) {
-					Requests.find({}, function (err, result) {
+					Requests.find().sort('id DESC').exec(function (err, result) {
 						if (err) return callback(err);
 
 						callback(null, apps, result);
@@ -74,6 +107,23 @@ module.exports = {
 				} else {
 					callback(null, apps, []);
 				}
+			},
+			function serializeRequests(apps, requests, callback) {
+				async.map(requests, function (element, callback) {
+					gcdb.user.getByID(element.owner, function (err, login) {
+						if (err) return callback(err);
+
+						element.owner = login;
+
+						element.status = serializeRequestStatus(element.status);
+
+						callback(null, element);
+					});
+				}, function (err, requests) {
+					if (err) return callback(err);
+
+					callback(null, apps, requests);
+				});
 			}
 		], function (err, apps, requests) {
 			if (err) return res.serverError(err);
@@ -85,14 +135,8 @@ module.exports = {
 		});
 	},
 
-	/* POST /apps/register */
-	registerApp: function (req, res) {
-
-		res.json({});
-	},
-
 	/* GET /apps/:id */
-	getApp: function (req, res) {
+	get: function (req, res) {
 		var id = parseInt(req.param('id'), 10),
 			app = {};
 
@@ -134,7 +178,7 @@ module.exports = {
 	},
 
 	/* POST /apps/:id */
-	editApp: function (req, res) {
+	edit: function (req, res) {
 		var newApp = {
 				id: parseInt(req.param('id'), 10),
 				name: validator.escape(req.param('name')),
@@ -195,6 +239,13 @@ module.exports = {
 				}
 
 				newApp.scope = newApp.scope.join(',');
+
+				if (!newRequest.scope.length) {
+					return res.json({
+						message: 'ERROR',
+						problemIn: 'scope'
+					});
+				}
 
 				callback(null, newApp);
 			},
@@ -299,7 +350,7 @@ module.exports = {
 	},
 
 	/* DELETE /apps/:id */
-	deleteApp: function (req, res) {
+	delete: function (req, res) {
 		var client = {
 			id: parseInt(req.param('id'), 10),
 			name: ""
@@ -345,26 +396,6 @@ module.exports = {
 				message: 'OK'
 			});
 		});
-	},
-
-
-	/* GET /apps/requests */
-	listRequests: function (req, res) {
-		res.view('apps/requests/list', {});
-	},
-
-	/* GET /apps/requests/:id */
-	getRequest: function (req, res) {
-		res.view('apps/requests/view', {});
-	},
-
-	/* POST /apps/requests/:id */
-	editRequest: function (req, res) {
-		res.json({});
-	},
-
-	/* DELETE /apps/requests/:id */
-	deleteRequest: function (req, res) {
-		res.json({});
 	}
+
 };

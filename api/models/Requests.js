@@ -40,8 +40,13 @@ module.exports = {
 			required: true
 		},
 
-		accepted: {
-			type: 'BOOLEAN',
+		message: {
+			type: 'TEXT',
+			required: true
+		},
+
+		status: {
+			type: 'INTEGER',
 			required: true
 		}
 

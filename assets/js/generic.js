@@ -32,7 +32,7 @@ $(document).ready(function () {
 							error: function (data) {
 								$('#gc-editappmodal .ui.form').addClass('error');
 
-								$('#gc-editappmodal errormessage').html('Произошла неизвестная ошибка, сообщите пожалуйста разработчику');
+								$('#gc-editappmodal #errormessage').html('Произошла неизвестная ошибка, сообщите пожалуйста разработчику');
 							},
 							success: function (data) {
 								if (data.message === 'ERROR') {
@@ -57,11 +57,15 @@ $(document).ready(function () {
 											message = 'Некорректный URL в поле домашней страницы';
 											break;
 
+										case 'scope':
+											message = 'Выберите, хотя бы, одно право';
+											break;
+
 										default:
 											message = 'Произошла неизвестная ошибка, сообщите пожалуйста разработчику';
 									}
 
-									$('#gc-editappmodal errormessage').html(message);
+									$('#gc-editappmodal #errormessage').html(message);
 								}
 
 								if (data.message === 'OK') {
@@ -286,5 +290,279 @@ $(document).ready(function () {
 		}).modal('show');
 
 		return false;
+	});
+
+	$(document).on('click', '#gc-approverequestbutton', function (e) {
+		var _this = this;
+		var requestid = $(_this).attr('requestid');
+
+		$('#gc-approverequestmodal').modal({
+			onDeny: function () {
+
+				return true;
+			},
+			onApprove: function () {
+				$.ajax({
+					type: "GET",
+					url: '/csrfToken',
+					success: function (csrfToken) {
+						$.ajax({
+							type: "POST",
+							url: '/apps/requests/' + requestid + '/status',
+							data: {
+								status: 1,
+								_csrf: csrfToken._csrf
+							},
+							success: function (data) {
+								if (data.message === 'OK') {
+									window.location.reload();
+								}
+							},
+							error: function (data) {
+								alert(data);
+							}
+						});
+					}
+				});
+
+				return false;
+			},
+			onShow: function () {
+				$.ajax({
+					type: "GET",
+					url: '/apps/requests/' + requestid,
+					data: {},
+					success: function (data) {
+						$('#gc-approverequestmodal #ar-name').html(data.name);
+					}
+				});
+
+				return true;
+			}
+		}).modal('show');
+
+		return false;
+	});
+
+	$(document).on('click', '#gc-declinerequestbutton', function (e) {
+		var _this = this;
+		var requestid = $(_this).attr('requestid');
+
+		$('#gc-declinerequestmodal').modal({
+			onDeny: function () {
+
+				return true;
+			},
+			onApprove: function () {
+				$.ajax({
+					type: "GET",
+					url: '/csrfToken',
+					success: function (csrfToken) {
+						$.ajax({
+							type: "POST",
+							url: '/apps/requests/' + requestid + '/status',
+							data: {
+								status: 2,
+								_csrf: csrfToken._csrf
+							},
+							success: function (data) {
+								if (data.message === 'OK') {
+									window.location.reload();
+								}
+							},
+							error: function (data) {
+								alert(data);
+							}
+						});
+					}
+				});
+
+				return false;
+			},
+			onShow: function () {
+				$.ajax({
+					type: "GET",
+					url: '/apps/requests/' + requestid,
+					data: {},
+					success: function (data) {
+						$('#gc-declinerequestmodal #dr-name').html(data.name);
+					}
+				});
+
+				return true;
+			}
+		}).modal('show');
+
+		return false;
+	});
+
+	$(document).on('click', '#gc-editrequestbutton', function (e) {
+		var _this = this;
+		var requestid = $(_this).attr('requestid');
+
+		$('#gc-editrequestmodal').modal({
+			onDeny: function () {
+				return true;
+			},
+			onApprove: function () {
+				$.ajax({
+					type: "GET",
+					url: '/csrfToken',
+					success: function (csrfToken) {
+						$.ajax({
+							type: "POST",
+							url: '/apps/requests/' + requestid,
+							data: $('#gc-editrequestmodal form').serialize() + '&_csrf=' + csrfToken._csrf,
+							error: function (data) {
+								$('#gc-editrequestmodal .ui.form').addClass('error');
+
+								$('#gc-editrequestmodal #errormessage').html('Произошла неизвестная ошибка, сообщите пожалуйста разработчику');
+							},
+							success: function (data) {
+								if (data.message === 'ERROR') {
+									$('#gc-editrequestmodal .ui.form').addClass('error');
+
+									var message = "";
+
+									switch (data.problemIn) {
+										case 'name':
+											message = 'Неправильный размер названия. Не более 100 символов и не менее одного символа.';
+											break;
+
+										case 'description':
+											message = 'Неправильный размер краткого описания. Не более 100 символов и не менее одного символа.';
+											break;
+
+										case 'redirectURI':
+											message = 'Некорректный URL в поле Callback';
+											break;
+
+										case 'homeURI':
+											message = 'Некорректный URL в поле домашней страницы';
+											break;
+
+										case 'scope':
+											message = 'Выберите, хотя бы, одно право';
+											break;
+
+										default:
+											message = 'Произошла неизвестная ошибка, сообщите пожалуйста разработчику';
+									}
+
+									$('#gc-editrequestmodal #errormessage').html(message);
+								}
+
+								if (data.message === 'OK') {
+									window.location.reload();
+								}
+							}
+						});
+					}
+				});
+
+				return true;
+			},
+			onShow: function () {
+				$('#gc-editrequestmodal .ui.form').removeClass('error');
+
+				$('#gc-editrequestmodal .content').css('height', $(window).height() - 200);
+				$('#gc-editrequestmodal').css('margin-top','3em');
+				$('#gc-editrequestmodal').css('top','0%');
+
+				$.ajax({
+					type: "GET",
+					url: '/apps/requests/' + requestid,
+					data: {},
+					success: function (data) {
+						$('#gc-editrequestmodal #er-id').html(data.id);
+
+						$('#gc-editrequestmodal input[name=name]').val(data.name);
+						$('#gc-editrequestmodal #er-name').html(data.name);
+
+						$('#gc-editrequestmodal input[name=description]').val(data.description);
+
+						$('#gc-editrequestmodal input[name=homeURI]').val(data.homeURI);
+						$('#gc-editrequestmodal input[name=redirectURI]').val(data.redirectURI);
+
+						var splitedScope = data.scope.split(',');
+
+						splitedScope.forEach(function (element) {
+							$('#gc-editrequestmodal input[name=' + element + ']').prop('checked', true);
+						});
+
+						$('#gc-editrequestmodal textarea[name=message]').val(data.message);
+					}
+				});
+
+				return true;
+			}
+		}).modal('show');
+
+		return false;
+	});
+
+	$(document).on('click', '#gc-registerbutton', function (e) {
+		if (!$('input[name=tos]').prop('checked')) {
+			$('#gc-registerform .ui.form').addClass('error');
+
+			$('#gc-registerform #errormessage').html('Примите соглашение пользователя');
+
+			return;
+		}
+
+		$.ajax({
+			type: "POST",
+			url: '/apps/register',
+			data: $('#gc-registerform').serialize(),
+			error: function (data) {
+				$('#gc-registerform .ui.form').addClass('error');
+
+				$('#gc-registerform #errormessage').html('Произошла неизвестная ошибка, сообщите пожалуйста разработчику');
+			},
+			success: function (data) {
+				if (data.message === 'ERROR') {
+					$('#gc-registerform .ui.form').addClass('error');
+
+					var message = "";
+
+					switch (data.problemIn) {
+						case 'name':
+							message = 'Неправильный размер названия. Не более 100 символов и не менее одного символа.';
+							break;
+
+						case 'description':
+							message = 'Неправильный размер краткого описания. Не более 100 символов и не менее одного символа.';
+							break;
+
+						case 'redirectURI':
+							message = 'Некорректный URL в поле Callback';
+							break;
+
+						case 'homeURI':
+							message = 'Некорректный URL в поле домашней страницы';
+							break;
+
+						case 'scope':
+							message = 'Выберите, хотя бы, одно право';
+							break;
+
+						case 'message':
+							message = 'Опишите для чего вам нужен доступ к API в поле "Подробное описание"';
+							break;
+
+						default:
+							message = 'Произошла неизвестная ошибка, сообщите пожалуйста разработчику';
+					}
+
+					$('#gc-registerform #errormessage').html(message);
+				}
+
+				if (data.message === 'OK') {
+					$('#gc-registerform')[0].reset();
+
+					window.location = '/';
+				}
+			}
+		});
 	});
 });

@@ -53,24 +53,23 @@ module.exports.routes = {
 	},
 
 
+	/* Requests */
+	'get /apps/register': 'requests.registerView',
+	'post /apps/register': 'requests.register',
+	//'get /apps/requests': 'requests.listRequests',
+	'get /apps/requests/:id': 'requests.get',
+	'post /apps/requests/:id': 'requests.edit',
+	'post /apps/requests/:id/status': 'requests.changeStatus',
+
+
 	/* Applications */
-	'/apps': 'apps.listApps',
+	'/apps': 'apps.list',
 
-	'get /apps/register': {
-		view: 'apps.register'
-	},
-	'post /apps/register': 'apps.registerApp',
-
-	'get /apps/:id': 'apps.getApp',
-	'post /apps/:id': 'apps.editApp',
+	'get /apps/:id': 'apps.get',
+	'post /apps/:id': 'apps.edit',
 	'post /apps/:id/regeneratekey': 'apps.regenerateKey',
 	'post /apps/:id/changeowner': 'apps.changeOwner',
-	'delete /apps/:id': 'apps.deleteApp',
-
-	'get /apps/requsets': 'apps.listRequests',
-	'get /apps/requsets/:id': 'apps.getRequest',
-	'post /apps/requsets/:id': 'apps.editRequest',
-	'delete /apps/requsets/:id': 'apps.deleteRequest',
+	'delete /apps/:id': 'apps.delete',
 
 
 	/* Sessions */

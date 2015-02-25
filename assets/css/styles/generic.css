@@ -86,6 +86,13 @@ i.icon {
 	margin: 0;
 }
 
+.gc.registerapp.header {
+	display: block;
+	font-size: 3.5rem;
+	text-align: center;
+	margin: 0px 0px 40px;
+}
+
 .gc.page.header {
 	font-size: 3rem;
 }

@@ -5,7 +5,7 @@
 <div class="ui positive message">
 	<i class="close icon"></i>
 	<div class="header">
-		<%= flash[0] %>
+		<%- flash[0] %>
 	</div>
 </div>
 <% } %>
@@ -23,7 +23,7 @@
 				<div class="content">
 					<a class="header">&#35;<%= element.id %>: &laquo;<%= element.name %>&raquo;</a>
 					<div class="meta">
-						<span class="cinema"><%= element.description %></span>
+						<span><%= element.description %></span>
 					</div>
 					<div class="description">
 						<b>Домашняя страница:</b>
@@ -75,7 +75,7 @@
 					<div class="content">
 						<a class="header">&#35;<%= element.id %>: <%= element.name %></a>
 						<div class="meta">
-							<span class="cinema"><%= element.description %></span>
+							<span><%= element.description %></span>
 						</div>
 						<div class="description">
 							<b>Домашняя страница:</b>
@@ -90,11 +90,24 @@
 							<br>
 							<b>Права доступа:</b>
 							<%= element.scope %>
+							<p style="font-size:1rem;margin-top:0.6rem;"><%= element.message %></p>
 						</div>
 						<div class="extra">
-							<div class="ui right floated primary button">
-								Редактировать
-								<i class="edit right icon"></i>
+							<div class="ui right floated <%= element.status.class %> label">
+								<%= element.status.name %>
+							</div>
+							<div class="ui icon pointing top left dropdown">
+								<div class="ui horizontal label"><i class="settings icon" style="margin-right: 0"></i>
+								</div>
+								<div class="menu">
+									<% if (element.status.id !== 1) { %>
+									<div class="item" id="gc-approverequestbutton" requestid="<%= element.id %>"><i class="checkmark right icon"></i>Одобрить</div>
+									<% } %>
+									<div class="item" id="gc-editrequestbutton" requestid="<%= element.id %>"><i class="edit right icon"></i>Редактировать</div>
+									<% if (element.status.id !== 2) { %>
+									<div class="item" id="gc-declinerequestbutton" requestid="<%= element.id %>"><i class="remove icon"></i>Отклонить</div>
+									<% } %>
+								</div>
 							</div>
 							<div class="ui horizontal label"><i class="user icon"></i>
 								<%= element.owner %>
@@ -117,3 +130,6 @@
 <%- partial( 'partials/generatenewkeymodal') %>
 <%- partial( 'partials/deleteappmodal') %>
 <%- partial( 'partials/changeownermodal') %>
+<%- partial( 'partials/approverequestmodal') %>
+<%- partial( 'partials/editrequestmodal') %>
+<%- partial( 'partials/declinerequestmodal') %>

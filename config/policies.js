@@ -22,10 +22,15 @@ module.exports.policies = {
 
 	'Apps': {
 		'*': 'authenticated',
-		'getApp': 'ownerNStaff',
-		'editApp': 'ownerNStaff',
+		'get': 'ownerNStaff',
+		'edit': 'ownerNStaff',
 		'regenerateKey': 'ownerNStaff',
-		'deleteApp': 'ownerNStaff'
+		'delete': 'ownerNStaff'
+	},
+
+	'Requests': {
+		'*': 'staffOnly',
+		'registerView': 'authenticated'
 	},
 
 	'UsersController': {
