@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>API документация &mdash; GreenCubes Developer</title>
+	<meta charset="utf-8">
+
+	<link rel="stylesheet" type="text/css" href="assets/css/libs/semantic.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/libs/normalize.css">
+	<link rel="stylesheet" href="assets/css/libs/pen.css">
+
+	<link rel="stylesheet" type="text/css" href="assets/css/styles/generic.css">
+</head>
+
+<body>
+	<div class="container gc boilerplate">
+		<div id="gc-header">
+			<div class="ui page grid">
+				<div class="column">
+					<div class="ui left large floated secondary menu" style="padding: 1rem 0rem;">
+						<a class="item" href="/" style="font-size:1.6rem">GreenCubes Developer</a>
+					</div>
+					<a href="/">
+						<img class="ui image gc logo" src="assets/images/logo.png">
+					</a>
+					<div class="ui right large floated secondary menu" style="padding: 1rem 0rem;">
+						<a class="active item" href="/api">API</a>
+						<div class="item">
+							<div class="ui top right pointing basic dropdown link">
+								<span class="header">Kernel</span>
+								<i class="dropdown icon"></i>
+								<div class="menu">
+									<div class="item"><a href="/user"><i class="code icon"></i> Ваши приложения</a>
+									</div>
+									<div class="item"><a href="/settings"><i class="unlock alternate icon"></i> Сессии</a>
+									</div>
+								</div>
+							</div>
+						</div>
+						<a id="gc-logoutbutton" class="item" href="#">
+							<i class="log out icon"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="gc developer content">
+			<div class="ui column grid">
+				<div class="column" style="width:70%" id="doccontent">
+					<div class="ui right rail">
+						<div style="margin-top: 160px;" class="ui sticky fixed top">
+							<div class="ui secondary vertical following fluid accordion menu">
+								<div class="item"><a class="title"><i tabindex="0" class="dropdown icon"></i> <b>Преамбула</b></a>
+									<div class="active content menu">
+										<a class="item active" href="#preamble">Преамбула</a>
+									</div>
+								</div>
+								<div class="item"><a class="title"><i tabindex="0" class="dropdown icon"></i> <b>Общая информация</b></a>
+									<div class="active content menu">
+										<a class="item active" href="#timeformat">Формат времени</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<h1 style="font-size: 3rem">Документация API</h1>
+
+					<a id="preamble" class="anchor"></a>
+
+					<p><b><a class="externallink" href="https://api.greencubes.org/" rel="nofollow" title="https://api.greencubes.org/">GreenCubes API</a></b> — официальный Web-API созданный для упрощения доступа к такой информации как: дату регистрации, последний вход игрока на всех серверах, его префикс и цвет его, цвет ника, URL ника и правильный ник. Количество игроков на определённом сервере и состояние сервера.</p>
+					<p>Также API предоставляет авторизацию через OAuth 2.0.</p>
+					<p>Разработчиком API является Kernel.</p>
+					<div class="ui divider"></div>
+
+					<h1><span class="mw-headline" id=".D0.9E.D0.B1.D1.89.D0.B0.D1.8F_.D0.B8.D0.BD.D1.84.D0.BE.D1.80.D0.BC.D0.B0.D1.86.D0.B8.D1.8F">Общая информация</span></h1>
+					<a id="timeformat" class="anchor"></a>
+					<h2><span class="mw-headline" id=".D0.A4.D0.BE.D1.80.D0.BC.D0.B0.D1.82_.D0.B2.D1.80.D0.B5.D0.BC.D0.B5.D0.BD.D0.B8">Формат времени</span></h2>
+					<p><b>Время выводится по GMT+0.</b> Любое время в API выводится в формате <a href="https://ru.wikipedia.org/wiki/POSIX" title="https://ru.wikipedia.org/wiki/POSIX">POSIX</a> (он же Timestamp).
+					</p>
+					<h2><span class="mw-headline" id="Rate_Limit">Rate Limit</span></h2>
+					<p>В API действует ограничение на 500 запросов для неавторизованного и 5000 запросов для авторизованного пользователя в час с одного IP адреса. Получить информацию о текущем количестве доступных запросов можно отправив запрос на <code>/rate_limit</code>. Подробнее в разделе <a href="#Rate_Limit_API" title="">Rate Limit API</a>.</p>
+
+					<h3><span class="mw-headline" id=".D0.92.D1.81.D1.82.D1.80.D0.B0.D0.B8.D0.B2.D0.B0.D0.BD.D0.B8.D0.B5_.D1.81.D1.82.D1.80.D0.B0.D0.BD.D0.B8.D1.86_.D0.B0.D0.B2.D1.82.D0.BE.D1.80.D0.B8.D0.B7.D0.B0.D1.86.D0.B8.D0.B8">Встраивание страниц авторизации</span></h3>
+					<p>Сервер отдаёт заголовок <code>X-Frame-Options: DENY</code>, что запрещает встраивание страниц авторизации в фреймы. Рекомендовано открывать страницы авторизации в новых окнах.</p>
+					<h1><span class="mw-headline" id=".D0.9E.D0.BF.D0.B8.D1.81.D0.B0.D0.BD.D0.B8.D0.B5_.D0.B2.D1.81.D0.B5.D1.85_API">Описание всех API</span></h1>
+					<p>На данный момент существует семь API:
+					</p>
+					<ul>
+						<li><b>User API</b> — Основная информация об игроке: дата регистрации, последний вход игрока на всех серверах, префикс и цвет его, цвет ника, URL скина и никнейм с правильным регистром.</li>
+						<li><b>Organization API</b> – Основная информация об организации: ID, тег, название, &#34;под-название&#34; оно же &#34;тип&#34;.</li>
+						<li><b>GC.Main API</b> — API Main сервера. Состояние сервера и количество игроков. Статистика по экономике (редирект на api.php).</li>
+						<li><b>GC.RPG API</b> — API RPG сервера. Состояние сервера и количество игроков.</li>
+						<li><b>GC.Apocalyptic</b> — API Apocalyptic сервера. Состояние сервера и количество игроков.</li>
+						<li><b>Meta API</b> — Информация о Web-API: текущая версия, адрес документации, авторы.</li>
+						<li><b>Rate Limit API</b> — Информация о лимите запросов для текущего IP.</li>
+					</ul>
+
+					<h2><span class="mw-headline" id="User_API">User API</span></h2>
+					<pre>GET  /users/:user</pre>
+					<p>Основная информация о пользователе:
+					</p>
+					<ul>
+						<li><code>id</code> – ID пользователя в системе.</li>
+						<li><code>username</code> — Правильный ник (с правильным регистром).</li>
+						<li><code>status</code> — Статус онлайна игрока на всех серверах.</li>
+						<li><code>lastseen</code> — Последний вход игрока на все сервера. Если не входил на сервер, то вместо значения будет <code>null</code>.</li>
+						<li><code>reg_date</code> — Дата регистрации.</li>
+						<li><code>prefix</code> — Префикс с цветами ников.</li>
+						<li><code>nick_color</code> — Цвет ника.</li>
+						<li><code>skin_url</code> — Адрес скина игрока. <b>Внимание!</b> Выводится вне зависимости от наличия у игрока скина. Если у игрока нет скина, то сервер отдаёт 404.</li>
+						<li><code>cape_url</code> — Адрес плаща игрока. <b>Внимание!</b> Выводится вне зависимости от наличия у игрока плаща. Если у игрока нет плаща, то сервер отдаёт 404.</li>
+						<li><code>banned</code> — Статус бана игрока.</li>
+						<li><code>bannedTill</code> — Время до которого игрок забанен. <b>Внимание!</b> Выводится только, если у игрока временный бан. В противном случае, его не будет в ответе от сервера.</li>
+						<li><code>badges</code> — Массив данных о <a href="%D0%97%D0%BD%D0%B0%D1%87%D0%BE%D0%BA" title="значок">значках</a>:
+							<ul>
+								<li><code>badgeId</code> — Идентификатор предмета (значка).</li>
+								<li><code>badgeData</code> — Метадата предмета (значка). (например, 4100,4, где 4100 это Id, а 4 это метадата)</li>
+								<li><code>first</code> — Дата первого скрафченного такого значка.</li>
+								<li><code>count</code> — Количество таких скрафченных значков.</li>
+							</ul>
+						</li>
+					</ul>
+					<p><b>Внимание!</b> Некоторые цвета могут иметь номер не в шестнадцатиричном виде, а в виде одиночного номера. В таких случаях используются цвета из базового раздела донатных цветных ников.<sup id="_ref-1" class="reference"><a href="#_note-1" title="">[1]</a></sup>
+					</p>
+					<p>Паттерн для отбрасывания цветов от Rena4ka: &#38;([0-9a-fA-F])|&#38;([usipg])|&#38;(r[0-9a-z]{8})</p>
+					<pre>
+					<code class="json">
+{
+  &#34;id&#34;: 1,
+  &#34;username&#34;: &#34;Rena4ka&#34;,
+  &#34;status&#34;:
+  {
+    &#34;main&#34;: true,
+    &#34;rpg&#34;: false,
+    &#34;apocalyptic&#34;: false
+  },
+  &#34;lastseen&#34;:
+  {
+    &#34;main&#34;: 1394924190,
+    &#34;rpg&#34;: 1394924190,
+    &#34;apocalyptic&#34;: 1394924190
+  },
+  &#34;reg_date&#34;: 1295000171,
+  &#34;prefix&#34;: &#34;&#38;r99446666[&#38;rff66c016G&#38;rfff7f7f7C&#38;r99446666]&#38;f &#34;,
+  &#34;nick_color&#34;: &#34;rffea8df7&#34;,
+  &#34;skin_url&#34;: &#34;http://greenusercontent.net/mc/skins/Rena4ka.png&#34;,
+  &#34;banned&#34;: true,
+  &#34;bannedTill&#34;: 1404858798,
+  &#34;badges&#34;: [
+     {
+      &#34;badgeId&#34;: 4100,
+      &#34;badgeData&#34;: 5,
+      &#34;first&#34;: 1406848657,
+      &#34;count&#34;: 1
+    }
+  ]
+}
+</code></pre>
+					<div class="ui divider"></div>
+					<pre>GET /user</pre>
+					<p><b>Тело запроса:</b>
+					</p>
+					<pre>access_token=47TbwmOFnUiXTVkTvh2an2KPcuD4xEzVObZZfs...ЭТОПРИМЕРEL8A0hDbSRju9</pre>
+					<p>Основная информация о <i>текущем</i> пользователе. Для успешного запроса вам потребуется ваш OAuth <code>access_token</code> (см. раздел <a href="#.D0.90.D0.B2.D1.82.D0.BE.D1.80.D0.B8.D0.B7.D0.B0.D1.86.D0.B8.D1.8F" title="">авторизация</a>).</p>
+					<p>Ответ от сервера такой же как и у <code>GET /users/:user</code>.
+					</p>
+					<div class="ui divider"></div>
+					<pre>GET /user/regions</pre>
+					<p><b>Тело запроса:</b>
+					</p>
+					<pre>access_token=47TbwmOFnUiXTVkTvh2an2KPcuD4xEzVObZZfs...ЭТОПРИМЕРEL8A0hDbSRju9</pre>
+					<p>Список регионов, в которых <i>текущий</i> пользователь имеет права (не только full или build, например).
+					</p>
+					<pre>
+					<code class="json">
+[
+  {
+    &#34;name&#34;: &#34;BaronHome_KernCastle&#34;,
+    &#34;rights&#34;: [
+      &#34;full&#34;,
+      &#34;build&#34;
+    ],
+    &#34;coordinates&#34;: {
+      &#34;first&#34;: &#34;-1305 10 -656&#34;,
+      &#34;second&#34;: &#34;-1158 127 -577&#34;
+    }
+  },
+  {
+    &#34;name&#34;: &#34;Nilahn&#34;,
+    &#34;rights&#34;: [
+      &#34;build-child&#34;,
+      &#34;build&#34;
+    ],
+    &#34;coordinates&#34;: {
+      &#34;first&#34;: &#34;-3303 0 -663&#34;,
+      &#34;second&#34;: &#34;-3076 127 -328&#34;
+    }
+  }
+]
+</code>
+</pre>
+
+					<h2><span class="mw-headline" id="Organization_API">Organization API</span></h2>
+					<pre>GET /organizations/:organizationId</pre>
+
+
+					<ul>
+						<li><code>id</code> – Идентификатор организации в системе.</li>
+						<li><code>tag</code> – Тег.</li>
+						<li><code>title</code> – Название.</li>
+						<li><code>subtitle</code> – &#34;Под-название&#34; оно же &#34;тип&#34; организации.</li>
+					</ul>
+
+					<pre>
+					<code class="json">
+{
+  &#34;id&#34;: 1,
+  &#34;tag&#34;: &#34;cats&#34;,
+  &#34;title&#34;: &#34;Кисоньки&#34;,
+  &#34;subtitle&#34;: &#34;Overmind&#34;,
+  &#34;url&#34;: &#34;https://greencubes.org/org/1&#34;
+}
+</code>
+</pre>
+
+					<h2><span class="mw-headline" id="GC.Main_API">GC.Main API</span></h2>
+					<pre>GET /main/status</pre>
+
+					<ul>
+						<li><code>server</code> — Название сервера.</li>
+						<li><code>status</code> — Статус работы сервера (онлайн или нет).</li>
+						<li><code>online</code> — Количество игроков онлайн.</li>
+					</ul>
+					<pre>
+					<code class="json">
+{
+  &#34;server&#34;: &#34;Main&#34;,
+  &#34;status&#34;: true,
+  &#34;online&#34;: 146
+}
+</code></pre>
+					<div class="ui divider"></div>
+					<pre>GET /main/online</pre>
+					<p>Отдаёт список игроков, которые сейчас на сервере. За исключением <a href="%D0%9C%D0%BE%D0%B4%D0%B5%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B" title="Модераторы">Модераторов</a> и <a href="%D0%90%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%86%D0%B8%D1%8F" title="Администрация">Команды ГК</a>.
+					</p>
+					<pre>
+					<code class="json">
+[
+  &#34;avtovaz&#34;,
+  &#34;beargrils7&#34;,
+  &#34;danik2003&#34;,
+  &#34;domainlocals&#34;,
+  &#34;milka56&#34;,
+  &#34;mumu&#34;,
+  &#34;PH0ENIX&#34;,
+  &#34;redfox&#34;,
+  &#34;YOT&#34;
+]
+</code>
+</pre>
+					<div class="ui divider"></div>
+					<pre>GET /main/economy</pre>
+
+					<ul>
+						<li><code>status</code> — Статус ответа. Значение status = 0 означает успешное получение данных. Любой другой статус является ошибкой.</li>
+						<li><code>dailymoney</code> — Оборот зелени за последние сутки.</li>
+						<li><code>time</code> — Актуальность данных.</li>
+					</ul>
+					<p><b>Внимание!</b> Актуальность данных не более 15 минут.
+					</p>
+					<pre>
+					<code class="json">
+{
+  &#34;economy&#34;: {
+     &#34;dailymoney&#34;: 3691909
+  },
+  &#34;time&#34;: 1395183916
+}
+</code></pre>
+					<div class="ui divider"></div>
+					<pre>GET /main/named_colors</pre>
+
+					<ul>
+						<li><code>name</code> — Название цвета на английском языке.</li>
+						<li><code>localizedName</code> — Название цвета на русском языке.</li>
+						<li><code>h</code> — Цветовой тон.</li>
+						<li><code>s</code> — Насыщенность.</li>
+						<li><code>pioneer</code> — Никнейм первооткрывателя.</li>
+						<li><code>opened</code> — Время первого открытия.</li>
+						<li><code>secondPioneer</code> — Никнейм второго открывшего.</li>
+						<li><code>repeated</code> — Время второго открытия.</li>
+					</ul>
+					<pre>
+					<code class="json">
+[
+  {
+    &#34;name&#34;: &#34;Pink&#34;,
+    &#34;localizedName&#34;: &#34;Розовый&#34;,
+    &#34;h&#34;: 349,
+    &#34;s&#34;: 25,
+    &#34;pioneer&#34;: &#34;SadKas&#34;,
+    &#34;opened&#34;: &#34;2013-12-10T13:09:56.000Z&#34;,
+    &#34;secondPioneer&#34;: &#34;Mopaxac&#34;,
+    &#34;repeated&#34;: &#34;2013-12-28T16:17:31.000Z&#34;
+  }
+]
+</code></pre>
+					<p>Также существует версия в виде HTML-таблицы: <a class="externallink" href="https://api.greencubes.org/main/named_colors/html" rel="nofollow" title="https://api.greencubes.org/main/named_colors/html">/main/named_colors/html</a>
+					</p>
+					<div class="ui divider"></div>
+					<pre>GET /main/items</pre>
+					<p>Отдаёт список блоков. Аналог <a class="externallink" href="https://greencubes.org/?action=list" rel="nofollow" title="https://greencubes.org/?action=list">этой</a> страницы.
+					</p>
+					<pre><code class="json">
+[
+  {
+    &#34;id&#34;: 4,
+    &#34;data&#34;: 0,
+    &#34;key&#34;: &#34;cube.cobblestone&#34;,
+    &#34;name&#34;: &#34;Булыжник&#34;,
+    &#34;image_url&#34;: &#34;https://greencubes.org/img/items/cobblestone.png&#34;
+  }
+]
+</code>
+</pre>
+					<div class="ui divider"></div>
+					<pre>GET /main/regions/:name</pre>
+					<p>Отдаёт информацию о регионе аналогичную внутриигровой команде /region info.</p>
+					<p><b>Внимание!</b> В <code>full_access</code> и <code>build_access</code>: <code>o:номер</code> обозначает, что права есть у организации, однако это ВРЕМЕННЫЙ вывод для организации, и в будущем это будет изменено. Не стоит это использовать в приложениях на данный момент. <code>all</code> обозначает, то же самое, что и в игре - права есть у всех.
+					</p>
+					<pre>
+					<code class="json">
+{
+  &#34;name&#34;: &#34;canterlot&#34;,
+  &#34;parent&#34;: &#34;spawn_cities_protect&#34;,
+  &#34;flags&#34;:
+  {
+    &#34;grow&#34;: 0,
+    &#34;blow&#34;: 0,
+    &#34;animals&#34;: 1
+  },
+  &#34;full_access&#34;: [
+    &#34;Favourite&#34;,
+    &#34;Rena4ka&#34;,
+    &#34;Drbadnick&#34;,
+    &#34;o:1482&#34;,
+    &#34;Medyza&#34;,
+    &#34;o:1344&#34;
+  ],
+  &#34;build_access&#34;:[
+    &#34;Djzero&#34;
+  ],
+  &#34;coordinates&#34;: {
+    &#34;first&#34;: &#34;-8302 40 -1707&#34;,
+    &#34;second&#34;: &#34;-7803 127 -1408&#34;
+  }
+}
+</code>
+</pre>
+
+					<h2><span class="mw-headline" id="GC.RPG_API">GC.RPG API</span></h2>
+					<pre>GET /rpg/status</pre>
+
+					<ul>
+						<li><code>server</code> — Название сервера.</li>
+						<li><code>status</code> — Статус работы сервера (онлайн или нет).</li>
+						<li><code>online</code> — Количество игроков онлайн.</li>
+					</ul>
+					<pre>
+					<code class="json">{
+  &#34;server&#34;: &#34;RPG&#34;,
+  &#34;status&#34;: true,
+  &#34;online&#34;: 42
+}
+</code></pre>
+					<div class="ui divider"></div>
+					<pre>GET /rpg/online</pre>
+					<p>Отдаёт список игроков, которые сейчас на сервере. За исключением <a href="%D0%9C%D0%BE%D0%B4%D0%B5%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B" title="Модераторы">Модераторов</a> и <a href="%D0%90%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%86%D0%B8%D1%8F" title="Администрация">Команды ГК</a>.
+					</p>
+					<pre>
+					<code class="json">[
+  &#34;avtovaz&#34;,
+  &#34;beargrils7&#34;,
+  &#34;danik2003&#34;,
+  &#34;domainlocals&#34;,
+  &#34;milka56&#34;,
+  &#34;mumu&#34;,
+  &#34;PH0ENIX&#34;,
+  &#34;redfox&#34;,
+  &#34;YOT&#34;
+]
+</code>
+</pre>
+
+
+					<h2><span class="mw-headline" id="GC.Apocalyptic_API">GC.Apocalyptic API</span></h2>
+					<pre><code class="http">GET /apocalyptic/status</code></pre>
+
+					<ul>
+						<li><code>server</code> — Название сервера.</li>
+						<li><code>status</code> — Статус работы сервера (онлайн или нет).</li>
+						<li><code>online</code> — Количество игроков онлайн.</li>
+					</ul>
+					<pre>
+					<code class="json">{
+  &#34;server&#34;: &#34;Apocalyptic&#34;,
+  &#34;status&#34;: true,
+  &#34;online&#34;: 34
+}
+</code></pre>
+					<div class="ui divider"></div>
+					<pre><code class="http">GET /apocalyptic/online</code></pre>
+					<p>Отдаёт список игроков, которые сейчас на сервере. За исключением <a href="%D0%9C%D0%BE%D0%B4%D0%B5%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B" title="Модераторы">Модераторов</a> и <a href="%D0%90%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%86%D0%B8%D1%8F" title="Администрация">Команды ГК</a>.
+					</p>
+					<pre><code class="json">[
+  &#34;avtovaz&#34;,
+  &#34;beargrils7&#34;,
+  &#34;danik2003&#34;,
+  &#34;domainlocals&#34;,
+  &#34;milka56&#34;,
+  &#34;mumu&#34;,
+  &#34;PH0ENIX&#34;,
+  &#34;redfox&#34;,
+  &#34;YOT&#34;
+]
+</code>
+</pre>
+
+
+					<h2><span class="mw-headline" id="Meta_API">Meta API</span></h2>
+					<pre><code class="http">GET /meta</code></pre>
+
+					<ul>
+						<li><code>version</code> — Текущая версия API. Значение после дефиса - текущий коммит в Git.</li>
+						<li><code>documentation_url</code> — Адрес документации (эта страница).</li>
+						<li><code>authors</code> — Авторы API.
+							<ul>
+								<li><code>name</code> — Имя и фамилия. В скобках никнейм.</li>
+								<li><code>homepage_url</code> — URL персонального сайта.</li>
+							</ul>
+						</li>
+					</ul>
+					<pre><code class="json">{
+  &#34;version&#34;: &#34;0.1-603b241&#34;,
+  &#34;documentation_url&#34;: &#34;https://wiki.greencubes.org/API&#34;,
+  &#34;authors&#34;:
+  [
+    {
+      &#34;name&#34;: &#34;Arseniy Maximov (Kern0)&#34;,
+      &#34;homepage_url&#34;: &#34;http://kern0.ru&#34;
+    }
+  ]
+}
+</code></pre>
+
+					<h2><span class="mw-headline" id="Rate_Limit_API">Rate Limit API</span></h2>
+					<pre><code class="http">GET /rate_limit</code></pre>
+
+					<ul>
+						<li><code>limit</code> — Общее ограничение по запросам в час.</li>
+						<li><code>remaining</code> — Количество разрешённых запросов.</li>
+						<li><code>reset</code> — Время в миллисекундах, когда сбросится счётчик.</li>
+					</ul>
+					<pre>
+					{
+  &#34;limit&#34;: 1000,
+  &#34;remaining&#34;: 942,
+  &#34;reset&#34;: 1397625331
+}</pre>
+
+					<p>Также в каждом ответе от сервера есть HTTP заголовки вида:
+					</p>
+					<pre>
+x-ratelimit-limit: 1000
+x-ratelimit-remaining: 999
+x-ratelimit-reset: 1397625331
+</pre>
+
+					<h1><span class="mw-headline" id=".D0.92.D0.B8.D0.B4.D1.8B_.D0.BE.D1.88.D0.B8.D0.B1.D0.BE.D0.BA_.D1.81.D0.B5.D1.80.D0.B2.D0.B5.D1.80.D0.B0_API">Виды ошибок сервера API</span></h1>
+					<p>Если что-то пошло не так, то сервер всегда может отдать ошибку соответствующую текущей проблеме.</p>
+					<h2><span class="mw-headline" id=".D0.A1.D1.82.D1.80.D0.B0.D0.BD.D0.B8.D1.86.D0.B0_.D0.BD.D0.B5_.D1.81.D1.83.D1.89.D0.B5.D1.81.D1.82.D0.B2.D1.83.D0.B5.D1.82">Страница не существует</span></h2>
+					<pre>
+					<code class="http">
+Status: 404 Not Found
+x-ratelimit-limit: 1000
+x-ratelimit-remaining: 999
+x-ratelimit-reset: 3007543
+					</code>
+					</pre>
+					<pre>
+					<code class="json">
+{
+  &#34;message&#34;: &#34;Not Found&#34;,
+  &#34;documentation_url&#34;: &#34;https://wiki.greencubes.org/API&#34;
+}
+</code>
+</pre>
+
+					<h2><span class="mw-headline" id=".D0.A2.D1.80.D0.B5.D0.B1.D1.83.D0.B5.D1.82.D1.81.D1.8F_.D0.B0.D0.B2.D1.82.D0.BE.D1.80.D0.B8.D0.B7.D0.B0.D1.86.D0.B8.D1.8F">Требуется авторизация</span></h2>
+					<p><b>Местоположение:</b> <code>/user</code>
+					</p>
+					<pre>
+					<code class="http">
+Status: 403 Forbidden
+x-ratelimit-limit: 1000
+x-ratelimit-remaining: 999
+x-ratelimit-reset: 3007543
+					</code>
+					</pre>
+					<pre>
+					<code class="json">
+{
+  &#34;message&#34;: &#34;Forbidden. Need authorization&#34;,
+  &#34;documentation_url&#34;: &#34;https://wiki.greencubes.org/API&#34;
+}
+</code>
+</pre>
+
+					<h2><span class="mw-headline" id=".D0.9F.D1.80.D0.B5.D0.B4.D0.BE.D1.81.D1.82.D0.B0.D0.B2.D0.BB.D0.B5.D0.BD.D0.BD.D1.8B.D0.B9_access_token_.D0.BD.D0.B5_.D0.B8.D0.BC.D0.B5.D0.B5.D1.82_.D0.BF.D1.80.D0.B0.D0.B2_.D0.BD.D0.B0_.D0.B4.D0.B0.D0.BD.D0.BD.D1.8B.D0.B9_scope">Предоставленный access_token не имеет прав на данный scope</span></h2>
+					<pre>
+					<code class="http">
+Status: 403
+x-ratelimit-limit: 1000
+x-ratelimit-remaining: 999
+x-ratelimit-reset: 3007543
+					</code>
+					</pre>
+					<pre>
+					<code class="json">
+{
+  &#34;message&#34;: &#34;Forbidden. Access token don&#39;t have access to this scope&#34;,
+  &#34;scope&#34;: &#34;profile&#34;
+  &#34;documentation_url&#34;: &#34;https://wiki.greencubes.org/API&#34;
+}
+</code>
+</pre>
+
+					<h2><span class="mw-headline" id=".D0.9F.D1.80.D0.B5.D0.B2.D1.8B.D1.88.D0.B5.D0.BD_.D0.BB.D0.B8.D0.BC.D0.B8.D1.82_.D0.B7.D0.B0.D0.BF.D1.80.D0.BE.D1.81.D0.BE.D0.B2">Превышен лимит запросов</span></h2>
+					<pre>
+					<code class="http">
+Status: 429 Too Many Requests
+x-ratelimit-limit: 1000
+x-ratelimit-remaining: 0
+x-ratelimit-reset: 3007543
+					</code>
+					</pre>
+					<pre>
+					<code class="json">
+{
+  &#34;message&#34;: &#39;Rate limit exceeded, retry later&#39;,
+  &#34;retry_in&#34;: 3007543,
+  &#34;documentation_url&#34;: &#34;https://wiki.greencubes.org/API&#34;
+}
+</code>
+</pre>
+
+					<h1><span class="mw-headline" id=".D0.92.D0.B8.D0.B4.D1.8B_.D0.BE.D1.88.D0.B8.D0.B1.D0.BE.D0.BA_.D1.81.D0.B5.D1.80.D0.B2.D0.B5.D1.80.D0.B0_OAuth_2.0">Виды ошибок сервера OAuth 2.0</span></h1>
+					<h2><span class="mw-headline" id=".D0.92_.D0.B7.D0.B0.D0.BF.D1.80.D0.BE.D1.81.D0.B5_.D0.BD.D0.B0_.D0.B0.D0.B2.D1.82.D0.BE.D1.80.D0.B8.D0.B7.D0.B0.D1.86.D0.B8.D1.8E.2F.D0.BF.D0.BE.D0.BB.D1.83.D1.87.D0.B5.D0.BD.D0.B8.D0.B5_.D1.82.D0.BE.D0.BA.D0.B5.D0.BD.D0.B0_.D0.BD.D0.B5_.D1.85.D0.B2.D0.B0.D1.82.D0.B0.D0.B5.D1.82_.D0.BE.D0.BF.D1.80.D0.B5.D0.B4.D0.B5.D0.BB.D1.91.D0.BD.D0.BD.D0.BE.D0.B3.D0.BE_.D0.BF.D0.B0.D1.80.D0.B0.D0.BC.D0.B5.D1.82.D1.80.D0.B0">В запросе на авторизацию/получение токена не хватает определённого параметра</span></h2>
+					<p><b>Местоположение:</b> <code>GET /oauth/authorize</code>
+					</p>
+					<pre>
+					<code class="http">
+Status: 400 Bad Request
+x-ratelimit-limit: 1000
+x-ratelimit-remaining: 999
+x-ratelimit-reset: 1396741263
+					</code>
+					</pre>
+					<pre>
+					<code class="json">
+{
+  &#34;message&#34;: &#34;missing_parameter is not defined&#34;,
+  &#34;documentation_url&#34;: &#34;https://wiki.greencubes.org/API&#34;
+}
+</code>
+</pre>
+					<p>Вместо <code>missing_parameter</code> может быть:
+						<br/>
+						<code>GET /oauth/authorize</code>:
+					</p>
+					<ul>
+						<li><code>client_id</code>
+						</li>
+						<li><code>redirect_uri</code>
+						</li>
+					</ul>
+					<p><code>GET /oauth/token</code>:
+					</p>
+					<ul>
+						<li><code>client_id</code>
+						</li>
+						<li><code>client_secret</code>
+						</li>
+						<li><code>code</code>
+						</li>
+						<li><code>grant_type</code>
+						</li>
+						<li><code>redirect_uri</code>
+						</li>
+					</ul>
+
+					<h2><span class="mw-headline" id=".D0.9D.D0.B5.D0.BA.D0.BE.D1.80.D1.80.D0.B5.D0.BA.D1.82.D0.BD.D1.8B.D0.B9_response_type_.D0.B2_.D0.B7.D0.B0.D0.BF.D1.80.D0.BE.D1.81.D0.B5_.D0.BD.D0.B0_.D0.B0.D0.B2.D1.82.D0.BE.D1.80.D0.B8.D0.B7.D0.B0.D1.86.D0.B8.D1.8E">Некорректный response_type в запросе на авторизацию</span></h2>
+					<p><b>Местоположение:</b> <code>GET /oauth/authorize</code>
+					</p>
+					<pre>
+					<code class="http">
+Status: 400 Bad Request
+x-ratelimit-limit: 1000
+x-ratelimit-remaining: 999
+x-ratelimit-reset: 1396741263
+					</code>
+					</pre>
+					<pre>
+					<code class="json">
+{
+  &#34;message&#34;: &#34;Wrong response_type&#34;,
+  &#34;documentation_url&#34;: &#34;https://wiki.greencubes.org/API&#34;
+}
+</code>
+</pre>
+
+					<h2><span class="mw-headline" id=".D0.95.D1.81.D0.BB.D0.B8_.D0.B8.D1.81.D0.BF.D0.BE.D0.BB.D1.8C.D0.B7.D1.83.D0.B5.D1.82.D1.81.D1.8F_.D1.83.D0.B6.D0.B5_.D0.B8.D1.81.D0.BF.D0.BE.D0.BB.D1.8C.D0.B7.D0.BE.D0.B2.D0.B0.D0.BD.D0.BD.D1.8B.D0.B9.2F.D0.BD.D0.B5.D0.B2.D0.B5.D1.80.D0.BD.D1.8B.D0.B9_.D0.BA.D0.BE.D0.B4_.D0.BF.D0.BE.D0.BB.D1.83.D1.87.D0.B5.D0.BD.D0.B8.D1.8F_.D1.82.D0.BE.D0.BA.D0.B5.D0.BD.D0.B0">Если используется уже использованный/неверный код получения токена</span></h2>
+
+					<p><b>Status</b>: 500 Internal Server Error
+						<br/>
+						<b>Местоположение:</b> <code>POST /oauth/token</code>
+					</p>
+					<pre>
+					<code class="http">
+x-ratelimit-limit: 1000
+x-ratelimit-remaining: 999
+x-ratelimit-reset: 1396741263
+					</code>
+					</pre>
+					<pre>
+					<code class="json">
+{
+  &#34;error&#34;: &#34;invalid_grant&#34;,
+  &#34;error_description&#34;: &#34;invalid code&#34;
+}
+</code>
+</pre>
+
+					<h2><span class="mw-headline" id=".D0.9D.D0.B5.D0.BA.D0.BE.D1.80.D1.80.D0.B5.D0.BA.D1.82.D0.BD.D1.8B.D0.B9_grant_type">Некорректный grant_type</span></h2>
+					<p><b>Местоположение:</b> <pre><code class="http">POST /oauth/token</code></pre>
+					</p>
+					<pre>
+					<code class="http">
+Status: 500 Internal Server Error
+x-ratelimit-limit: 1000
+x-ratelimit-remaining: 999
+x-ratelimit-reset: 1396741263
+					</code>
+					</pre>
+					<pre>
+					<code class="json">
+{
+  &#34;error&#34;: &#34;unsupported_grant_type&#34;,
+  &#34;error_description&#34;: &#34;invalid grant type&#34;
+}
+</code>
+</pre>
+					<h1><span class="mw-headline" id=".D0.9F.D1.80.D0.B8.D0.BC.D0.B5.D1.87.D0.B0.D0.BD.D0.B8.D1.8F">Примечания</span></h1>
+					<ol class="references">
+						<li id="_note-1"><b><a href="#_ref-1" title="">&#8593;</a></b> <a class="externallink" href="https://greencubes.org/img/colors.png" rel="nofollow" title="https://greencubes.org/img/colors.png">Таблица с цветными никами из этого раздела.</a>
+						</li>
+					</ol>
+					<h1><span class="mw-headline" id=".D0.A1.D0.BC._.D0.A2.D0.B0.D0.BA.D0.B6.D0.B5">См. Также</span></h1>
+
+					<ul>
+						<li><a class="externallink" href="https://forum.greencubes.org/viewtopic.php?t=25166" rel="nofollow" title="https://forum.greencubes.org/viewtopic.php?t=25166">GreenCubes API (раздел на форуме)</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div id="gc-usefullinks">
+			<nav>
+				<h1>GreenCubes</h1>
+				<div><a href="https://forum.greencubes.org">Форум</a>
+				</div>
+				<div><a href="https://forum.greencubes.org/viewforum.php?f=255">Блог разработки</a>
+				</div>
+				<div><a href="https://wiki.greencubes.org">Wiki (энциклопедия проекта)</a>
+				</div>
+				<div><a href="https://greencubes.org/?action=ucp&amp;do=org">Организации</a>
+				</div>
+				<div><a href="https://greencubes.org/news/karta_mira#t">Карта мира</a>
+				</div>
+				<div><a href="https://greencubes.org/cat/shop">Магазин</a>
+				</div>
+				<div><a href="https://wiki.greencubes.org/API">API</a>
+				</div>
+			</nav>
+			<nav>
+				<h1>Аккаунт</h1>
+				<div><a href="https://greencubes.org/?action=ucp&amp;do=reg">Учётная запись</a>
+				</div>
+				<div><a href="https://greencubes.org/?action=ucp&amp;do=skin">Настройка персонажа</a>
+				</div>
+				<div><a href="https://greencubes.org/?action=ucp&amp;do=homes">Дополнительные дома</a>
+				</div>
+				<div><a href="https://greencubes.org/?action=pay">Пополнение баланса</a>
+				</div>
+				<div><a href="https://greencubes.org/?action=ucp&amp;do=premium">Премиум-аккаунт</a>
+				</div>
+				<div><a href="https://greencubes.org/?action=ucp&amp;do=nickname">Настройка никнейма</a>
+				</div>
+			</nav>
+			<nav>
+				<h1>Помощь</h1>
+				<div><a href="https://greencubes.org/news/stub">О проекте</a>
+				</div>
+				<div><a href="https://greencubes.org/cat/rules">Правила проекта</a>
+				</div>
+				<div><a href="https://greencubes.org/news/obraszenie_k_novichkam#t">Информация для новичков</a>
+				</div>
+				<div><a href="https://greencubes.org/news/faq2#t" title="Частозадаваемые вопросы">FAQ</a>
+				</div>
+				<div><a href="https://greencubes.org/news/stub">Загрузка игрового клиента</a>
+				</div>
+				<div><a href="https://greencubes.org/news/stub">Основные игровые команды</a>
+				</div>
+			</nav>
+			<nav>
+				<h1>Техническая поддержка</h1>
+				<div><a href="https://help.greencubes.org">Система поддержки</a>
+				</div>
+				<div><a href="https://forum.greencubes.org/viewtopic.php?f=255&amp;t=25624">Технические требования</a>
+				</div>
+				<div><a href="https://greencubes.org/news/stub">Защита учётной записи</a>
+				</div>
+				<div><a href="http://status.greencubes.org">Состояние сервисов</a>
+				</div>
+			</nav>
+		</div>
+		<div id="gc-footer">
+			<div class="ui page grid">
+				<div class="column">
+					<div class="ui right large floated secondary menu">
+						<div class="item">
+							<a href="http://kern0.ru">Kern0</a> &#64; <a href="https://greencubes.org">GreenCubes</a> &copy;
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="gc-easteregg">wow so modern</div>
+	</div>
+
+	<!-- JS -->
+	<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script src="assets/js/semantic.min.js" type="application/javascript"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/8.4/styles/github.min.css">
+	<script src="https://cdn.jsdelivr.net/highlight.js/8.4/highlight.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			$('.ui.dropdown').dropdown();
+			$('.ui.accordion').accordion();
+			$('.ui.sticky').sticky({
+				context: '#doccontent'
+			});
+		});
+		hljs.initHighlightingOnLoad();
+	</script>
+</body>
+
+</html>

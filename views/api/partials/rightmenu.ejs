@@ -1,0 +1,47 @@
+<div class="ui right rail">
+	<div class="ui sticky" id="rightmenu">
+		<div class="ui secondary vertical following fluid menu">
+			<div class="item">
+				<a class="title" href="/api"><b>Обзор</b></a>
+			</div>
+			<div class="item">
+				<a class="title" href="/api/authorization"><b>Авторизация</b></a>
+				<div class="active content menu">
+					<a class="item active" href="/api/authorization#preamble">Преамбула</a>
+					<a class="item active" href="/api/authorization#basicauth">Базовая авторизация</a>
+					<a class="item active" href="/api/authorization#serverauth">OAuth 2.0 &mdash; Server-flow</a>
+					<a class="item active" href="/api/authorization#clientauth">OAuth 2.0 &mdash; Client-flow (Implicit Flow)</a>
+				</div>
+			</div>
+			<div class="item">
+			<a class="title" href="/api/methods"><b>Методы API</b></a>
+				<div class="active content menu">
+					<a class="item active" href="/api/methods#types">Виды API</a>
+					<a class="item active" href="/api/methods#userapi">User API</a>
+					<a class="item active" href="/api/methods#orgapi">Organization API</a>
+					<a class="item active" href="/api/methods#mainapi">Main API</a>
+					<a class="item active" href="/api/methods#metaapi">Meta API</a>
+					<a class="item active" href="/api/methods#ratelimitapi">Rate Limit API</a>
+				</div>
+			</div>
+			<div class="item">
+				<a class="title" href="/api/errors#typesoferrorsapi"><b>Виды ошибок сервера API</b></a>
+				<div class="active content menu">
+					<a class="item active" href="/api/errors#pagenotfound">Страница не найдена</a>
+					<a class="item active" href="/api/errors#forbidden">Требуется авторизация</a>
+					<a class="item active" href="/api/errors#tokendoesnthaveaccess">Предоставленный access_token не имеет прав на данный scope</a>
+					<a class="item active" href="/api/errors#toomanyrequests">Превышен лимит запросов</a>
+				</div>
+			</div>
+			<div class="item">
+				<a class="title" href="/api/errors#typesoferrorsoauth2"><b>Виды ошибок сервера OAuth 2.0</b></a>
+				<div class="active content menu">
+					<a class="item active" href="/api/errors#tokennoparameter">В запросе на авторизацию/получение токена не хватает определённого параметра</a>
+					<a class="item active" href="/api/errors#incorrectresponsetype">Некорректный response_type в запросе на авторизацию</a>
+					<a class="item active" href="/api/errors#wrongtokencode">Если используется уже использованный/неверный код получения токена</a>
+					<a class="item active" href="/api/errors#incorrectgranttype">Некорректный grant_type</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

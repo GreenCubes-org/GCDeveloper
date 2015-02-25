@@ -1,0 +1,32 @@
+<div class="ui page grid">
+	<div class="column">
+		<div class="ui left large floated secondary menu" style="padding: 1rem 0rem;">
+			<a class="item" href="/" style="font-size:1.6rem">GreenCubes Developer</a>
+		</div>
+		<a href="/">
+			<img class="ui image gc logo" src="/images/logo.png">
+		</a>
+		<div class="ui right large floated secondary menu" style="padding: 1rem 0rem;">
+			<a class="item" href="/api">API</a>
+			<% if (req.user) { %>
+			<div class="item">
+				<div class="ui top right pointing basic dropdown link">
+					<span class="header"><%= req.user.username %></span>
+					<i class="dropdown icon"></i>
+					<div class="menu">
+						<div class="item"><a href="/apps"><i class="code icon"></i> Ваши приложения</a></div>
+						<div class="item"><a href="/sessions"><i class="unlock alternate icon"></i> Сессии</a></div>
+					</div>
+				</div>
+			</div>
+			<a id="gc-logoutbutton" class="item" href="/logout">
+				<i class="log out icon"></i>
+			</a>
+			<% } else { %>
+			<a class="item" href="/login">
+				Войти <i class="user icon"></i>
+			</a>
+			<% } %>
+		</div>
+	</div>
+</div>

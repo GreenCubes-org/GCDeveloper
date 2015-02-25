@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>API документация &mdash; GreenCubes Developer</title>
+	<meta charset="utf-8">
+
+	<link rel="stylesheet" type="text/css" href="assets/css/libs/semantic.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/libs/normalize.css">
+	<link rel="stylesheet" href="assets/css/libs/pen.css">
+
+	<link rel="stylesheet" type="text/css" href="assets/css/styles/generic.css">
+</head>
+
+<body>
+	<div class="container gc boilerplate">
+		<div id="gc-header">
+			<div class="ui page grid">
+				<div class="column">
+					<div class="ui left large floated secondary menu" style="padding: 1rem 0rem;">
+						<a class="item" href="/" style="font-size:1.6rem">GreenCubes Developer</a>
+					</div>
+					<a href="/">
+						<img class="ui image gc logo" src="assets/images/logo.png">
+					</a>
+					<div class="ui right large floated secondary menu" style="padding: 1rem 0rem;">
+						<a class="active item" href="/api">API</a>
+						<div class="item">
+							<div class="ui top right pointing basic dropdown link">
+								<span class="header">Kernel</span>
+								<i class="dropdown icon"></i>
+								<div class="menu">
+									<div class="item"><a href="/user"><i class="code icon"></i> Ваши приложения</a>
+									</div>
+									<div class="item"><a href="/settings"><i class="unlock alternate icon"></i> Сессии</a>
+									</div>
+								</div>
+							</div>
+						</div>
+						<a id="gc-logoutbutton" class="item" href="#">
+							<i class="log out icon"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="gc developer content">
+			<div class="ui column grid">
+				<div class="column" style="width:70%" id="doccontent">
+					<div class="ui right rail">
+						<div style="margin-top: 160px;" class="ui sticky fixed top">
+							<div class="ui secondary vertical following fluid accordion menu">
+								<div class="item"><a class="title"><i tabindex="0" class="dropdown icon"></i> <b>Преамбула</b></a>
+									<div class="active content menu">
+										<a class="item active" href="#preamble">Преамбула</a>
+									</div>
+								</div>
+								<div class="item"><a class="title"><i tabindex="0" class="dropdown icon"></i> <b>Общая информация</b></a>
+									<div class="active content menu">
+										<a class="item active" href="#timeformat">Формат времени</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<h1 class="ui header" style="font-size: 3rem">Авторизация
+					<p class="sub header"><a class="nostyle link" href="/api">Документация API</a> / <b>Авторизация</b></p></h1>
+
+					<a id="preamble" class="anchor"></a>
+
+					<p>Сервер API предоставляет авторизацию через протокол <a class="externallink" href="http://oauth.net/2/" rel="nofollow" title="http://oauth.net/2/">OAuth 2.0</a> и через обычную авторизацию. Авторизация требуется только для метода <code>/user</code> и служит скорее для предоставления базовой авторизации через GreenCubes для сторонних приложений.</p>
+					<h2><span class="mw-headline" id=".D0.91.D0.B0.D0.B7.D0.BE.D0.B2.D0.B0.D1.8F_.D0.B0.D0.B2.D1.82.D0.BE.D1.80.D0.B8.D0.B7.D0.B0.D1.86.D0.B8.D1.8F">Базовая авторизация</span></h2>
+					<p>Нужно сделать POST запрос на <code>/login</code>, получив ошибку или Success, мы получаем доступ к защищённым API.</p>
+					<p>Для выхода используйте <code>GET /logout</code>
+					</p>
+					<h2><span class="mw-headline" id="OAuth_2.0_.E2.80.93_Server-flow">OAuth 2.0 – Server-flow</span></h2>
+					<p><b>Тут описывается случай, когда вы авторизуетесь с веб-сервера, а не мобильного приложения.</b>
+						<br/> Для начала клиент делает GET запрос на <code>/oauth/authorize</code> со следующими параметрами:
+					</p>
+					<pre>
+client_id=2
+redirect_uri=http://example.doge/oauth/callback
+response_type=code
+</pre>
+					<p>Где <code>client_id</code> - это ID вашего приложения на OAuth сервере, а <code>redirect_uri</code> - это адрес куда впоследствии вышлется код для получения токена. В зависимости от того, залогинен ли пользователь или нет, он вернёт нам одну из следующих страниц: &#60;gallery widths=300 heights=200&#62; Файл:Форма логина API.png|Форма логина Файл:Страница разрешения API.png|Спрашиваем у пользователя разрешение на использование его данных &#60;/gallery&#62;
+					</p>
+					<p>После нажатия на &#34;Разрешить&#34;, страница отправляет запрос на <code>/oauth/authorize/decision</code>, после чего сервер отвечает запросом с единственным параметром на заданный <code>redirect_uri</code>:
+					</p>
+					<pre>
+code=w88RMIrSxJdvMmX1hb6DAGHBG2RLUsS8
+</pre>
+
+					<p>Теперь же ваш сервер должен отправить POST запрос на <code>/oauth/access_token</code> следующего вида:
+					</p>
+					<pre>
+client_id=2
+client_secret=wowsecurepasswd
+code=w88RMIrSxJdvMmX1hb6DAGHBG2RLUsS8
+grant_type=authorization_code
+redirect_uri=http://example.doge/oauth/callback
+</pre>
+
+					<p>Если всё хорошо, то в ответ он получит JSON следующего вида:
+					</p>
+					<pre>
+					<code class="json">
+{
+    &#34;access_token&#34;: {
+        &#34;token&#34;: &#34;47TbwmOFnUiXTVkTvh2an2KPcuD4xEzVObZZfs...06ylygeFxUVyPjWkkvTCEL8A0hDbSRju9&#34;,
+        &#34;userId&#34;: 95671,
+        &#34;username&#34;: &#34;Kernel&#34;,
+        &#34;clientId&#34;: 2,
+        &#34;scope&#34;: &#34;profile,email&#34;
+    },
+    &#34;token_type&#34;: &#34;bearer&#34;
+}
+</code>
+</pre>
+					<p>Теперь вы можете использовать полученный <code>token</code> для доступа к защищённым частям API, например, <code>/user</code>
+					</p>
+
+					<ul>
+						<li><code>access_token</code> — Объект с <code>access_token</code>.
+							<ul>
+								<li><code>token</code> — Токен авторизации. <b>Примечание:</b> Токен только тут имеет идентификатор <code>token</code> в дальнейшем при авторизации его нужно отсылать как <code>access_token</code>.</li>
+								<li><code>userId</code> – ID пользователя в системе.</li>
+								<li><code>username</code> — Имя пользователя для которого выдан <code>access_token</code>.</li>
+								<li><code>clientId</code> — Числовой идентификатор приложения.</li>
+								<li><code>scope</code> — Выданные права доступа. Как правило, это только <code>profile</code>, <code>email</code> и <code>regions</code>
+								</li>
+							</ul>
+						</li>
+						<li><code>token_type</code> — Тип токена. Может быть только <code>bearer</code>. Введение других типов токенов не планируется.</li>
+					</ul>
+
+
+					<h2><span class="mw-headline" id="OAuth_2.0_.E2.80.93_Client-flow_.28Implicit_Flow.29">OAuth 2.0 – Client-flow (Implicit Flow)</span></h2>
+					<p><b>Тут описывается случай, когда вы авторизуетесь из мобильного/браузерного клиентского приложения (без сервера), а не серверного приложения.</b>
+						<br/> Для начала клиент делает GET запрос на <code>/oauth/authorize</code> со следующими параметрами:
+					</p>
+					<pre>
+client_id=2
+redirect_uri=http://example.doge/oauth/callback
+response_type=token
+</pre>
+					<p>Где <code>client_id</code> - это ID вашего приложения на OAuth сервере, а <code>redirect_uri</code> - это адрес на который будет впоследствии передан <code>access_token</code>. В зависимости от того, залогинен ли пользователь или нет, он вернёт нам одну из следующих страниц: &#60;gallery widths=300 heights=200&#62; Файл:Форма логина API.png|Форма логина Файл:Страница разрешения API.png|Спрашиваем у пользователя разрешение на использование его данных &#60;/gallery&#62;
+					</p>
+					<p><b>Если Вы разрабатываете браузерное Javascript-приложение</b> (обращаетесь к API с внешнего сайта), необходимо указывать ссылку в рамках домена, указанного в настройках приложения. В остальных случаях в качестве <code>redirect_uri</code> нужно использовать адрес <a class="externallink" href="https://api.greencubes.org/blank.html." rel="nofollow" title="https://api.greencubes.org/blank.html.">https://api.greencubes.org/blank.html.</a> </p>
+
+					<p>После нажатия на &#34;Разрешить&#34;, страница отправляет запрос на <code>/oauth/authorize/decision</code>, после чего сервер, если всё конечно хорошо, отвечает перенаправлением с двумя параметрами в <b>hash</b> URL на заданный <code>redirect_uri</code>:
+					</p>
+					<pre>
+access_token=w88RMIrSxJdvMmX1hb6DAGHBG2RLUsS8
+token_type=Bearer
+</pre>
+					<p>Соответственно, адрес будет выглядеть примерно так:
+						<br/>
+						<code><a class="externallink" href="http://example.doge/oauth/callback#access_token=w88RMIrSxJdvMmX1hb6DAGHBG2RLUsS8&#38;token_type=Bearer" rel="nofollow" title="http://example.doge/oauth/callback#access_token=w88RMIrSxJdvMmX1hb6DAGHBG2RLUsS8&#38;token_type=Bearer">http://example.doge/oauth/callback#access_token=w88RMIrSxJdvMmX1hb6DAGHBG2RLUsS8&#38;token_type=Bearer</a></code>.</p>
+					<p>Теперь вы можете использовать полученный <code>access_token</code> для доступа к защищённым частям API, например, <code>/user</code>
+					</p>
+
+					<ul>
+						<li><code>access_token</code> — Токен авторизации.</li>
+						<li><code>token_type</code> – Тип токена. В данный момент, строго только <code>Bearer</code>.</li>
+					</ul>
+
+					<div class="ui divider"></div>
+					<h2>Навигация</h2>
+					<div class="ui big list">
+						<div class="item">
+							<a href="/api" class="item">Документация API</a>
+							<div class="list">
+								<a href="/api/auth" class="item" style="font-weight: bold">Авторизация</a>
+								<a href="/api/methods" class="item">Методы</a>
+								<a href="/api/errors" class="item">Ошибки</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="gc-usefullinks">
+			<nav>
+				<h1>GreenCubes</h1>
+				<div><a href="https://forum.greencubes.org">Форум</a>
+				</div>
+				<div><a href="https://forum.greencubes.org/viewforum.php?f=255">Блог разработки</a>
+				</div>
+				<div><a href="https://wiki.greencubes.org">Wiki (энциклопедия проекта)</a>
+				</div>
+				<div><a href="https://greencubes.org/?action=ucp&amp;do=org">Организации</a>
+				</div>
+				<div><a href="https://greencubes.org/news/karta_mira#t">Карта мира</a>
+				</div>
+				<div><a href="https://greencubes.org/cat/shop">Магазин</a>
+				</div>
+				<div><a href="https://wiki.greencubes.org/API">API</a>
+				</div>
+			</nav>
+			<nav>
+				<h1>Аккаунт</h1>
+				<div><a href="https://greencubes.org/?action=ucp&amp;do=reg">Учётная запись</a>
+				</div>
+				<div><a href="https://greencubes.org/?action=ucp&amp;do=skin">Настройка персонажа</a>
+				</div>
+				<div><a href="https://greencubes.org/?action=ucp&amp;do=homes">Дополнительные дома</a>
+				</div>
+				<div><a href="https://greencubes.org/?action=pay">Пополнение баланса</a>
+				</div>
+				<div><a href="https://greencubes.org/?action=ucp&amp;do=premium">Премиум-аккаунт</a>
+				</div>
+				<div><a href="https://greencubes.org/?action=ucp&amp;do=nickname">Настройка никнейма</a>
+				</div>
+			</nav>
+			<nav>
+				<h1>Помощь</h1>
+				<div><a href="https://greencubes.org/news/stub">О проекте</a>
+				</div>
+				<div><a href="https://greencubes.org/cat/rules">Правила проекта</a>
+				</div>
+				<div><a href="https://greencubes.org/news/obraszenie_k_novichkam#t">Информация для новичков</a>
+				</div>
+				<div><a href="https://greencubes.org/news/faq2#t" title="Частозадаваемые вопросы">FAQ</a>
+				</div>
+				<div><a href="https://greencubes.org/news/stub">Загрузка игрового клиента</a>
+				</div>
+				<div><a href="https://greencubes.org/news/stub">Основные игровые команды</a>
+				</div>
+			</nav>
+			<nav>
+				<h1>Техническая поддержка</h1>
+				<div><a href="https://help.greencubes.org">Система поддержки</a>
+				</div>
+				<div><a href="https://forum.greencubes.org/viewtopic.php?f=255&amp;t=25624">Технические требования</a>
+				</div>
+				<div><a href="https://greencubes.org/news/stub">Защита учётной записи</a>
+				</div>
+				<div><a href="http://status.greencubes.org">Состояние сервисов</a>
+				</div>
+			</nav>
+		</div>
+		<div id="gc-footer">
+			<div class="ui page grid">
+				<div class="column">
+					<div class="ui right large floated secondary menu">
+						<div class="item">
+							<a href="http://kern0.ru">Kern0</a> &#64; <a href="https://greencubes.org">GreenCubes</a> &copy;
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="gc-easteregg">wow so modern</div>
+	</div>
+
+	<!-- JS -->
+	<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script src="assets/js/semantic.min.js" type="application/javascript"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/8.4/styles/github.min.css">
+	<script src="https://cdn.jsdelivr.net/highlight.js/8.4/highlight.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			$('.ui.dropdown').dropdown();
+			$('.ui.accordion').accordion();
+			$('.ui.sticky').sticky({
+				context: '#doccontent'
+			});
+		});
+		hljs.initHighlightingOnLoad();
+	</script>
+</body>
+
+</html>

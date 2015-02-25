@@ -1,0 +1,119 @@
+<% title='Приложения &mdash; GreenCubes Developer',
+	flash = req.flash('info'); %>
+<h1 class="gc page header">Приложения</h1>
+<% if (flash.length) { %>
+<div class="ui positive message">
+	<i class="close icon"></i>
+	<div class="header">
+		<%= flash[0] %>
+	</div>
+</div>
+<% } %>
+<div class="ui <%= (req.user.staff) ? 'two' : 'one' %> columns grid">
+	<div class="column">
+	<% if (req.user.staff) { %>
+		<h2 class="ui header">Все приложения</h2>
+		<% } else { %>
+			<h2 class="ui header">Ваши приложения</h2>
+		<% } %>
+		<div class="ui items">
+		<% if (apps.length) { %>
+		<% apps.forEach(function (element) { %>
+			<div class="item">
+				<div class="content">
+					<a class="header">&#35;<%= element.id %>: &laquo;<%= element.name %>&raquo;</a>
+					<div class="meta">
+						<span class="cinema"><%= element.description %></span>
+					</div>
+					<div class="description">
+						<b>Домашняя страница:</b>
+						<a href="<%= element.homeURI %>">
+							<%= element.homeURI %>
+						</a>
+						<br>
+						<b>Callback:</b>
+						<a href="<%= element.redirectURI %>">
+							<%= element.redirectURI %>
+						</a>
+						<br>
+						<b>Права доступа:</b>
+						<%= element.scope %>
+					</div>
+					<div class="extra">
+						<div class="ui icon pointing top left dropdown">
+							<div class="ui horizontal label"><i class="settings icon" style="margin-right: 0"></i>
+							</div>
+							<div class="menu">
+								<div class="item" id="gc-eaeditbutton" appid="<%= element.id %>"><i class="edit right icon"></i>Редактировать</div>
+								<div class="item" id="gc-gnkbutton" appid="<%= element.id %>"><i class="privacy icon"></i>Сгенерировать новый секретный ключ</div>
+								<div class="item" id="gc-cobutton" appid="<%= element.id %>"><i class="user icon"></i>Поменять владельца приложения</div>
+								<div class="item" id="gc-dabutton" appid="<%= element.id %>"><i class="remove icon"></i>Удалить приложение</div>
+							</div>
+						</div>
+						<div class="ui horizontal label"><i class="user icon"></i>
+							<%= element.owner %>
+						</div>
+						<% if (element.internal) { %>
+							<div class="ui horizontal label"><i class="terminal icon"></i> Внутреннее приложение</div>
+							<% } %>
+					</div>
+				</div>
+			</div>
+			<% }) %>
+			<% } else { %>
+			<div style="padding: 5em 0em;text-align: center;font-size:1.4em">У вас ещё нет приложений! Так <a href="/apps/register">подайте же заявку</a></div>
+			<% } %>
+		</div>
+	</div>
+	<% if (req.user.staff) { %>
+	<div class="column">
+			<h2 class="ui header">Заявки на приложения</h2>
+			<% if (requests.length) { %>
+			<div class="ui items">
+				<% requests.forEach(function (element) { %>
+				<div class="item">
+					<div class="content">
+						<a class="header">&#35;<%= element.id %>: <%= element.name %></a>
+						<div class="meta">
+							<span class="cinema"><%= element.description %></span>
+						</div>
+						<div class="description">
+							<b>Домашняя страница:</b>
+							<a href="<%= element.homeURI %>">
+								<%= element.homeURI %>
+							</a>
+							<br>
+							<b>Callback:</b>
+							<a href="<%= element.redirectURI %>">
+								<%= element.redirectURI %>
+							</a>
+							<br>
+							<b>Права доступа:</b>
+							<%= element.scope %>
+						</div>
+						<div class="extra">
+							<div class="ui right floated primary button">
+								Редактировать
+								<i class="edit right icon"></i>
+							</div>
+							<div class="ui horizontal label"><i class="user icon"></i>
+								<%= element.owner %>
+							</div>
+							<% if (element.internal) { %>
+								<div class="ui horizontal label"><i class="privacy icon"></i> Внутреннее приложение</div>
+								<% } %>
+						</div>
+					</div>
+				</div>
+				<% }) %>
+				<% } else { %>
+					<div style="padding: 5em 0em;text-align: center;font-size:1.4em">Заявок нет</div>
+				<% } %>
+		</div>
+		<% } %>
+	</div>
+</div>
+<%- partial( 'partials/editappmodal') %>
+<%- partial( 'partials/generatenewkeymodal') %>
+<%- partial( 'partials/deleteappmodal') %>
+<%- partial( 'partials/changeownermodal') %>

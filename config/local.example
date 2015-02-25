@@ -1,0 +1,45 @@
+// local.js example
+
+module.exports = {
+	appName: 'GC.Developer',
+
+	port: process.env.PORT || 80,
+	
+	logLevel: 'debug',
+	
+	migrate: 'alter',
+
+	// The runtime "environment" of your app is either 'development' or 'production'.
+	environment: process.env.NODE_ENV || 'production',
+
+	// Session secret
+	sessionSecret: 'somethinglongandRANDOM', //Make it pure random
+
+	db: {
+		api: { // Application DB
+			host: 'localhost',
+			user: 'YOUR_MYSQL_USER',
+			password: 'YOUR_MYSQL_PASSWORD', 
+			database: 'YOUR_MYSQL_DB',
+			socketPath: '/var/run/mysqld/mysqld.sock'
+		}
+		redis: {//Redis DB
+			host: 'localhost',
+			port: 6379,
+			ttl: 129600, // = 1.5 days
+			db: {//change this if other db
+				session: 0
+			}, 
+			pass:'<redis auth password>'
+		}
+	},
+	
+	oauth2: {
+		authorizationURL: '',
+		tokenURL: '',
+		clientID: '',
+		clientSecret: '',
+		callbackURL: '/api/oauth/callback',
+		loginURL: 'http://api.greencubes.org/oauth/authorize?response_type=code&redirect_uri=http://help.greencubes.org/oauth/callback&client_id=42'
+	}
+};

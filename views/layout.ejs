@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><%= title %></title>
+		<meta charset="utf-8">
+
+		<link rel="stylesheet" type="text/css" href="/css/libs/semantic.css">
+		<link rel="stylesheet" type="text/css" href="/css/libs/normalize.css">
+		<link rel="stylesheet" type="text/css" href="/css/libs/chartist.min.css">
+		<link rel="stylesheet" href="css/libs/pen.css">
+
+		<link rel="stylesheet" type="text/css" href="/css/styles/generic.css">
+	</head>
+	<body>
+		<div class="container gc boilerplate">
+			<div id="gc-header">
+				<%- partial('partials/header') %>
+			</div>
+			<div class="gc developer content">
+				<%- body %>
+			</div>
+			<div id="gc-usefullinks">
+				<nav>
+					<h1>GreenCubes</h1>
+					<div><a href="https://forum.greencubes.org">Форум</a></div>
+					<div><a href="https://forum.greencubes.org/viewforum.php?f=255">Блог разработки</a></div>
+					<div><a href="https://wiki.greencubes.org">Wiki (энциклопедия проекта)</a></div>
+					<div><a href="https://greencubes.org/?action=ucp&amp;do=org">Организации</a></div>
+					<div><a href="https://greencubes.org/news/karta_mira#t">Карта мира</a></div>
+					<div><a href="https://greencubes.org/cat/shop">Магазин</a></div>
+					<div><a href="https://wiki.greencubes.org/API">API</a></div>
+				</nav>
+				<nav>
+					<h1>Аккаунт</h1>
+					<div><a href="https://greencubes.org/?action=ucp&amp;do=reg">Учётная запись</a></div>
+					<div><a href="https://greencubes.org/?action=ucp&amp;do=skin">Настройка персонажа</a></div>
+					<div><a href="https://greencubes.org/?action=ucp&amp;do=homes">Дополнительные дома</a></div>
+					<div><a href="https://greencubes.org/?action=pay">Пополнение баланса</a></div>
+					<div><a href="https://greencubes.org/?action=ucp&amp;do=premium">Премиум-аккаунт</a></div>
+					<div><a href="https://greencubes.org/?action=ucp&amp;do=nickname">Настройка никнейма</a></div>
+				</nav>
+				<nav>
+					<h1>Помощь</h1>
+					<div><a href="https://greencubes.org/news/stub">О проекте</a></div>
+					<div><a href="https://greencubes.org/cat/rules">Правила проекта</a></div>
+					<div><a href="https://greencubes.org/news/obraszenie_k_novichkam#t">Информация для новичков</a></div>
+					<div><a href="https://greencubes.org/news/faq2#t" title="Частозадаваемые вопросы">FAQ</a></div>
+					<div><a href="https://greencubes.org/news/stub">Загрузка игрового клиента</a></div>
+					<div><a href="https://greencubes.org/news/stub">Основные игровые команды</a></div>
+				</nav>
+				<nav>
+					<h1>Техническая поддержка</h1>
+					<div><a href="https://help.greencubes.org">Система поддержки</a></div>
+					<div><a href="https://forum.greencubes.org/viewtopic.php?f=255&amp;t=25624">Технические требования</a></div>
+					<div><a href="https://greencubes.org/news/stub">Защита учётной записи</a></div>
+					<div><a href="http://status.greencubes.org">Состояние сервисов</a></div>
+				</nav>
+			</div>
+			<div id="gc-footer">
+				<div class="ui page grid">
+					<div class="column">
+						<div class="ui right large floated secondary menu">
+							<div class="item">
+								<a href="http://kern0.ru">Kern0</a> &#64; <a href="https://greencubes.org">GreenCubes</a> &copy;
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="gc-easteregg">( ͡° ͜ʖ ͡°)</div>
+		</div>
+
+		<!-- JS -->
+		<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script src="/js/semantic.min.js" type="application/javascript"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/8.4/styles/github.min.css">
+		<script src="https://cdn.jsdelivr.net/highlight.js/8.4/highlight.min.js"></script>
+		<script src="/js/generic.js" type="application/javascript"></script>
+	</body>
+</html>

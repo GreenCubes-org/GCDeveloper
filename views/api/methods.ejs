@@ -1,0 +1,359 @@
+<div class="ui column grid">
+	<div class="column" style="width:70%" id="doccontent">
+		<%- partial('partials/rightmenu') %>
+		<h1 class="ui header" style="font-size: 3rem">Методы API
+		<p class="sub header"><a class="nostyle link" href="/api">Документация API</a> / <b>Методы API</b></p></h1>
+
+		<a id="types" class="anchor"></a>
+		<h2>Виды API</h2>
+
+		<p>На данный момент существует семь API:
+		</p>
+		<ul>
+			<li><b>User API</b> — Основная информация об игроке: дата регистрации, последний вход игрока на всех серверах, префикс и цвет его, цвет ника, URL скина и никнейм с правильным регистром.</li>
+			<li><b>Organization API</b> – Основная информация об организации: ID, тег, название, &#34;под-название&#34; оно же &#34;тип&#34;.</li>
+			<li><b>Main API</b> — API Main сервера. Состояние сервера и количество игроков. Статистика по экономике (редирект на api.php).</li>
+			<li><b>Meta API</b> — Информация о Web-API: текущая версия, адрес документации, авторы.</li>
+			<li><b>Rate Limit API</b> — Информация о лимите запросов для текущего IP.</li>
+		</ul>
+
+		<a id="userapi" class="anchor"></a>
+		<h2>User API</h2>
+		<pre><code class="http">GET /users/:user</code></pre>
+		<p>Основная информация о пользователе:
+		</p>
+		<ul>
+			<li><code>id</code> – ID пользователя в системе.</li>
+			<li><code>username</code> — Правильный ник (с правильным регистром).</li>
+			<li><code>status</code> — Статус онлайна игрока на всех серверах.</li>
+			<li><code>lastseen</code> — Последний вход игрока на все сервера. Если не входил на сервер, то вместо значения будет <code>null</code>.</li>
+			<li><code>reg_date</code> — Дата регистрации.</li>
+			<li><code>prefix</code> — Префикс с цветами ников.</li>
+			<li><code>nick_color</code> — Цвет ника.</li>
+			<li><code>skin_url</code> — Адрес скина игрока. <b>Внимание!</b> Выводится вне зависимости от наличия у игрока скина. Если у игрока нет скина, то сервер отдаёт 404.</li>
+			<li><code>cape_url</code> — Адрес плаща игрока. <b>Внимание!</b> Выводится вне зависимости от наличия у игрока плаща. Если у игрока нет плаща, то сервер отдаёт 404.</li>
+			<li><code>banned</code> — Статус бана игрока.</li>
+			<li><code>bannedTill</code> — Время до которого игрок забанен. <b>Внимание!</b> Выводится только, если у игрока временный бан. В противном случае, его не будет в ответе от сервера.</li>
+			<li><code>badges</code> — Массив данных о значках:
+	<ul>
+		<li><code>badgeId</code> — Идентификатор предмета (значка).</li>
+		<li><code>badgeData</code> — Метадата предмета (значка). (например, 4100,4, где 4100 это Id, а 4 это метадата)</li>
+		<li><code>first</code> — Дата первого скрафченного такого значка.</li>
+		<li><code>count</code> — Количество таких скрафченных значков.</li>
+	</ul>
+			</li>
+		</ul>
+		<p><b>Внимание!</b> Некоторые цвета могут иметь номер не в шестнадцатиричном виде, а в виде одиночного номера. В таких случаях используются цвета из базового раздела донатных цветных ников.<sup id="_ref-1" class="reference"><a href="#_note-1" title="">[1]</a></sup>
+		</p>
+		<p>Паттерн для отбрасывания цветов от Rena4ka: &#38;([0-9a-fA-F])|&#38;([usipg])|&#38;(r[0-9a-z]{8})</p>
+		<pre>
+		<code class="json">
+	{
+	  &#34;id&#34;: 1,
+	  &#34;username&#34;: &#34;Rena4ka&#34;,
+	  &#34;status&#34;:
+	  {
+		&#34;main&#34;: true,
+		&#34;rpg&#34;: false,
+		&#34;apocalyptic&#34;: false
+	  },
+	  &#34;lastseen&#34;:
+	  {
+		&#34;main&#34;: 1394924190,
+		&#34;rpg&#34;: 1394924190,
+		&#34;apocalyptic&#34;: 1394924190
+	  },
+	  &#34;reg_date&#34;: 1295000171,
+	  &#34;prefix&#34;: &#34;&#38;r99446666[&#38;rff66c016G&#38;rfff7f7f7C&#38;r99446666]&#38;f &#34;,
+	  &#34;nick_color&#34;: &#34;rffea8df7&#34;,
+	  &#34;skin_url&#34;: &#34;http://greenusercontent.net/mc/skins/Rena4ka.png&#34;,
+	  &#34;banned&#34;: true,
+	  &#34;bannedTill&#34;: 1404858798,
+	  &#34;badges&#34;: [
+		{
+		  &#34;badgeId&#34;: 4100,
+		  &#34;badgeData&#34;: 5,
+		  &#34;first&#34;: 1406848657,
+		  &#34;count&#34;: 1
+		}
+	  ]
+	}
+		</code></pre>
+
+		<div class="ui divider"></div>
+
+		<pre><code class="http">GET /user</code></pre>
+		<p><b>Тело запроса:</b>
+		</p>
+		<pre>access_token=47TbwmOFnUiXTVkTvh2an2KPcuD4xEzVObZZfs...ЭТОПРИМЕРEL8A0hDbSRju9</pre>
+		<p>Основная информация о <i>текущем</i> пользователе. Для успешного запроса вам потребуется ваш OAuth <code>access_token</code> (см. раздел <a href="/api/authorization">авторизация</a>).</p>
+		<p>Ответ от сервера такой же как и у <code>GET /users/:user</code>.
+		</p>
+
+		<div class="ui divider"></div>
+
+		<pre><code class="http">GET /user/regions</code></pre>
+		<p><b>Тело запроса:</b>
+		</p>
+		<pre>access_token=47TbwmOFnUiXTVkTvh2an2KPcuD4xEzVObZZfs...ЭТОПРИМЕРEL8A0hDbSRju9</pre>
+		<p>Список регионов, в которых <i>текущий</i> пользователь имеет права (не только full или build, например).
+		</p>
+		<pre>
+		<code class="json">
+	[
+	  {
+		&#34;name&#34;: &#34;BaronHome_KernCastle&#34;,
+		&#34;rights&#34;: [
+		  &#34;full&#34;,
+		  &#34;build&#34;
+		],
+		&#34;coordinates&#34;: {
+		  &#34;first&#34;: &#34;-1305 10 -656&#34;,
+		  &#34;second&#34;: &#34;-1158 127 -577&#34;
+		}
+	  },
+	  {
+		&#34;name&#34;: &#34;Nilahn&#34;,
+		&#34;rights&#34;: [
+		  &#34;build-child&#34;,
+		  &#34;build&#34;
+		],
+		&#34;coordinates&#34;: {
+		  &#34;first&#34;: &#34;-3303 0 -663&#34;,
+		  &#34;second&#34;: &#34;-3076 127 -328&#34;
+		}
+	  }
+	]
+		</code>
+		</pre>
+
+
+		<a id="orgapi" class="anchor"></a>
+		<h2>Organization API</h2>
+		<pre><code class="http">GET /organizations/:organizationId</code></pre>
+
+
+		<ul>
+			<li><code>id</code> – Идентификатор организации в системе.</li>
+			<li><code>tag</code> – Тег.</li>
+			<li><code>title</code> – Название.</li>
+			<li><code>subtitle</code> – &#34;Под-название&#34; оно же &#34;тип&#34; организации.</li>
+		</ul>
+
+		<pre>
+		<code class="json">
+	{
+	  &#34;id&#34;: 1,
+	  &#34;tag&#34;: &#34;cats&#34;,
+	  &#34;title&#34;: &#34;Кисоньки&#34;,
+	  &#34;subtitle&#34;: &#34;Overmind&#34;,
+	  &#34;url&#34;: &#34;https://greencubes.org/org/1&#34;
+	}
+		</code>
+		</pre>
+
+
+		<a id="mainapi" class="anchor"></a>
+		<h2>Main API</h2>
+		<pre><code class="http">GET /main/status</code></pre>
+
+		<ul>
+			<li><code>server</code> — Название сервера.</li>
+			<li><code>status</code> — Статус работы сервера (онлайн или нет).</li>
+			<li><code>online</code> — Количество игроков онлайн.</li>
+		</ul>
+		<pre>
+		<code class="json">
+	{
+	  &#34;server&#34;: &#34;Main&#34;,
+	  &#34;status&#34;: true,
+	  &#34;online&#34;: 146
+	}
+		</code></pre>
+		<div class="ui divider"></div>
+		<pre><code class="http">GET /main/online</code></pre>
+		<p>Отдаёт список игроков, которые сейчас на сервере. За исключением Модераторов и Команды ГК.
+		</p>
+		<pre>
+		<code class="json">
+	[
+		&#34;avtovaz&#34;,
+		&#34;beargrils7&#34;,
+		&#34;danik2003&#34;,
+		&#34;domainlocals&#34;,
+		&#34;milka56&#34;,
+		&#34;mumu&#34;,
+		&#34;PH0ENIX&#34;,
+		&#34;redfox&#34;,
+		&#34;YOT&#34;
+	]
+		</code>
+		</pre>
+		<div class="ui divider"></div>
+		<pre><code class="http">GET /main/economy</code></pre>
+
+		<ul>
+			<li><code>status</code> — Статус ответа. Значение status = 0 означает успешное получение данных. Любой другой статус является ошибкой.</li>
+			<li><code>dailymoney</code> — Оборот зелени за последние сутки.</li>
+			<li><code>time</code> — Актуальность данных.</li>
+		</ul>
+		<p><b>Внимание!</b> Актуальность данных не более 15 минут.
+		</p>
+		<pre>
+		<code class="json">
+	{
+	  &#34;economy&#34;: {
+		&#34;dailymoney&#34;: 3691909
+	  },
+	  &#34;time&#34;: 1395183916
+	}
+		</code></pre>
+		<div class="ui divider"></div>
+		<pre><code class="http">GET /main/named_colors</code></pre>
+
+		<ul>
+			<li><code>name</code> — Название цвета на английском языке.</li>
+			<li><code>localizedName</code> — Название цвета на русском языке.</li>
+			<li><code>h</code> — Цветовой тон.</li>
+			<li><code>s</code> — Насыщенность.</li>
+			<li><code>pioneer</code> — Никнейм первооткрывателя.</li>
+			<li><code>opened</code> — Время первого открытия.</li>
+			<li><code>secondPioneer</code> — Никнейм второго открывшего.</li>
+			<li><code>repeated</code> — Время второго открытия.</li>
+		</ul>
+		<pre>
+		<code class="json">
+	[
+	  {
+		&#34;name&#34;: &#34;Pink&#34;,
+		&#34;localizedName&#34;: &#34;Розовый&#34;,
+		&#34;h&#34;: 349,
+		&#34;s&#34;: 25,
+		&#34;pioneer&#34;: &#34;SadKas&#34;,
+		&#34;opened&#34;: &#34;2013-12-10T13:09:56.000Z&#34;,
+		&#34;secondPioneer&#34;: &#34;Mopaxac&#34;,
+		&#34;repeated&#34;: &#34;2013-12-28T16:17:31.000Z&#34;
+	  }
+	]
+		</code></pre>
+		<p>Также существует версия в виде HTML-таблицы: <a href="https://api.greencubes.org/main/named_colors/html" rel="nofollow">/main/named_colors/html</a>
+		</p>
+		<div class="ui divider"></div>
+		<pre><code class="http">GET /main/items</code></pre>
+		<p>Отдаёт список блоков. Аналог <a href="https://greencubes.org/?action=list" rel="nofollow">этой</a> страницы.
+		</p>
+		<pre><code class="json">
+	[
+	  {
+		&#34;id&#34;: 4,
+		&#34;data&#34;: 0,
+		&#34;key&#34;: &#34;cube.cobblestone&#34;,
+		&#34;name&#34;: &#34;Булыжник&#34;,
+		&#34;image_url&#34;: &#34;https://greencubes.org/img/items/cobblestone.png&#34;
+	  }
+	]
+		</code>
+		</pre>
+		<div class="ui divider"></div>
+			<pre><code class="http">GET /main/regions/:name</code></pre>
+		<p>Отдаёт информацию о регионе аналогичную внутриигровой команде /region info.</p>
+		<p><b>Внимание!</b> В <code>full_access</code> и <code>build_access</code>: <code>o:номер</code> обозначает, что права есть у организации, однако это ВРЕМЕННЫЙ вывод для организации, и в будущем это будет изменено. Не стоит это использовать в приложениях на данный момент. <code>all</code> обозначает, то же самое, что и в игре - права есть у всех.
+		</p>
+		<pre>
+		<code class="json">
+	{
+	  &#34;name&#34;: &#34;canterlot&#34;,
+	  &#34;parent&#34;: &#34;spawn_cities_protect&#34;,
+	  &#34;flags&#34;:
+	  {
+		&#34;grow&#34;: 0,
+		&#34;blow&#34;: 0,
+		&#34;animals&#34;: 1
+	  },
+	  &#34;full_access&#34;: [
+		&#34;Favourite&#34;,
+		&#34;Rena4ka&#34;,
+		&#34;Drbadnick&#34;,
+		&#34;o:1482&#34;,
+		&#34;Medyza&#34;,
+		&#34;o:1344&#34;
+	  ],
+	  &#34;build_access&#34;:[
+		&#34;Djzero&#34;
+	  ],
+	  &#34;coordinates&#34;: {
+		&#34;first&#34;: &#34;-8302 40 -1707&#34;,
+		&#34;second&#34;: &#34;-7803 127 -1408&#34;
+	  }
+	}
+		</code>
+		</pre>
+
+
+		<a id="metaapi" class="anchor"></a>
+		<h2>Meta API</h2>
+		<pre><code class="http">GET /meta</code></pre>
+
+		<ul>
+			<li><code>version</code> — Текущая версия API. Значение после дефиса - текущий коммит в Git.</li>
+			<li><code>documentation_url</code> — Адрес документации (эта страница).</li>
+			<li><code>authors</code> — Авторы API.
+	<ul>
+		<li><code>name</code> — Имя и фамилия. В скобках никнейм.</li>
+		<li><code>homepage_url</code> — URL персонального сайта.</li>
+	</ul>
+			</li>
+		</ul>
+		<pre><code class="json">
+	{
+	  &#34;version&#34;: &#34;0.1-603b241&#34;,
+	  &#34;documentation_url&#34;: &#34;https://wiki.greencubes.org/API&#34;,
+	  &#34;authors&#34;:
+	  [
+		{
+		  &#34;name&#34;: &#34;Arseniy Maximov (Kern0)&#34;,
+		  &#34;homepage_url&#34;: &#34;http://kern0.ru&#34;
+		}
+	  ]
+	}
+		</code></pre>
+
+
+		<a id="ratelimitapi" class="anchor"></a>
+		<h2>Rate Limit API</h2>
+		<pre><code class="http">GET /rate_limit</code></pre>
+
+		<ul>
+			<li><code>limit</code> — Общее ограничение по запросам в час.</li>
+			<li><code>remaining</code> — Количество разрешённых запросов.</li>
+			<li><code>reset</code> — Время в миллисекундах, когда сбросится счётчик.</li>
+		</ul>
+		<pre>
+	{
+	  &#34;limit&#34;: 1000,
+	  &#34;remaining&#34;: 942,
+	  &#34;reset&#34;: 1397625331
+	}</pre>
+
+		<p>Также в каждом ответе от сервера есть HTTP заголовки вида:
+		</p>
+		<pre>
+	x-ratelimit-limit: 1000
+	x-ratelimit-remaining: 999
+	x-ratelimit-reset: 1397625331
+		</pre>
+
+		<div class="ui divider"></div>
+		<h2>Навигация</h2>
+		<div class="ui big list">
+			<div class="item">
+				<a href="/api" class="item">Обзор</a>
+				<div class="list">
+					<a href="/api/authorization" class="item">Авторизация</a>
+					<a href="/api/methods" class="item" style="font-weight: bold">Методы</a>
+					<a href="/api/errors" class="item">Ошибки</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

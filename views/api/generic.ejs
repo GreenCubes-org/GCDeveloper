@@ -1,0 +1,37 @@
+<div class="ui column grid">
+	<div class="column" style="width:70%" id="doccontent">
+		<%- partial('partials/rightmenu') %>
+		<h1 class="ui header" style="font-size: 3rem">Обзор
+		<p class="sub header"><b>Документация API</b></p></h1>
+
+		<a id="preamble" class="anchor"></a>
+
+		<p><b><a class="externallink" href="https://api.greencubes.org/" rel="nofollow" title="https://api.greencubes.org/">GreenCubes API</a></b> — официальный Web-API созданный для упрощения доступа к такой информации как: дату регистрации, последний вход игрока на всех серверах, его префикс и цвет его, цвет ника, URL ника и правильный ник. Количество игроков на определённом сервере и состояние сервера.</p>
+		<p>Также API предоставляет авторизацию через OAuth 2.0.</p>
+		<p>Разработчиком API является Kernel.</p>
+		<div class="ui divider"></div>
+
+		<h1><span>Общая информация</h1>
+		<a id="timeformat" class="anchor"></a>
+		<h2>Формат времени</h2>
+		<p><b>Время выводится по GMT+0.</b> Любое время в API выводится в формате <a href="https://ru.wikipedia.org/wiki/POSIX" title="https://ru.wikipedia.org/wiki/POSIX">POSIX</a> (он же Timestamp).
+		</p>
+		<h2>Rate Limit</h2>
+		<p>В API действует ограничение на 500 запросов для неавторизованного и 5000 запросов для авторизованного пользователя в час с одного IP адреса. Получить информацию о текущем количестве доступных запросов можно отправив запрос на <code>/rate_limit</code>.<br>Подробнее в разделе <a href="/api/methods#ratelimitapi" title="">Rate Limit API</a>.</p>
+
+		<h3>Встраивание страниц авторизации</h3>
+		<p>Сервер отдаёт заголовок <code>X-Frame-Options: DENY</code>, что запрещает встраивание страниц авторизации в фреймы. Рекомендовано открывать страницы авторизации в новых окнах.</p>
+
+		<div class="ui divider"></div>
+		<h2>Навигация</h2>
+		<div class="ui big list">
+			<div class="item">
+				<a href="/api" class="item" style="font-weight: bold">Обзор</a>
+				<div class="list">
+					<a href="/api/authorization" class="item">Авторизация</a>
+					<a href="/api/methods" class="item">Методы</a>
+					<a href="/api/errors" class="item">Ошибки</a>
+				</div>
+			</div>
+		</div>
+	</div>
