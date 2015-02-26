@@ -16,21 +16,37 @@ module.exports = {
 	sessionSecret: 'somethinglongandRANDOM', //Make it pure random
 
 	db: {
-		api: { // Application DB
+		app: { //Application DB - отдельная бд
 			host: 'localhost',
-			user: 'YOUR_MYSQL_USER',
-			password: 'YOUR_MYSQL_PASSWORD', 
-			database: 'YOUR_MYSQL_DB',
-			socketPath: '/var/run/mysqld/mysqld.sock'
-		}
+			user: '',
+			password: '', 
+			database: ''
+		},
+		api: { //API DB - gcapi
+			host: 'localhost',
+			user: '',
+			password: '', 
+			database: ''
+		},
+		site: { //User auth DB - testSite
+			host: 'localhost',
+			user: '',
+			password: '',
+			database: ''
+		},
+		users: { //User auth DB - mainserver
+			host: 'localhost',
+			user: '',
+			password: '',
+			database: ''
+		},
 		redis: {//Redis DB
 			host: 'localhost',
 			port: 6379,
 			ttl: 129600, // = 1.5 days
 			db: {//change this if other db
 				session: 0
-			}, 
-			pass:'<redis auth password>'
+			}
 		}
 	},
 	
