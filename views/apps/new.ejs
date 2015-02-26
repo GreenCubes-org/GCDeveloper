@@ -1,13 +1,17 @@
-<% title = 'Заявка на регистрацию &mdash; GreenCubes Developer' %>
+<% title = 'Регистрация нового приложения &mdash; GreenCubes Developer' %>
 
-<header class="gc registerapp header">Заявка на регистрацию приложения</header>
-<p style="font-size: 1.6rem">Чтобы в полную меру использовать мощь нашего <a href="/api">API</a>, иметь доступ к приватным частям онного, вам потребуется регистрация вашего приложения в системе. Ниже вы можете оставить заявку.</p>
+<header class="gc registerapp header">Регистрация нового приложения</header>
+<p style="font-size: 1.6rem">С помощью данной формы вы можете зарегистрировать приложение в системе.</p>
 <div class="ui segment">
-	<form id="gc-registerform">
+	<form id="gc-newform">
 		<div class="ui form">
 			<div class="ui error message">
 				<div class="header">Ошибка!</div>
 				<p id="errormessage"></p>
+			</div>
+			<div class="field">
+				<label>Владелец</label>
+				<input placeholder="Kernel" type="text" name="owner" value="<%= req.user.username %>">
 			</div>
 			<div class="field">
 				<label>Название приложения</label>
@@ -29,6 +33,12 @@
 				<label>Права доступа</label>
 				<div class="field">
 					<div class="ui checkbox checked">
+						<input name="all" type="checkbox">
+						<label>Все</label>
+					</div>
+				</div>
+				<div class="field">
+					<div class="ui checkbox checked">
 						<input name="profile" type="checkbox">
 						<label>Профиль</label>
 					</div>
@@ -46,18 +56,24 @@
 					</div>
 				</div>
 			</div>
-			<div class="field">
-				<label>Подробное описание приложения (обоснование использования API, это не публикуется где-либо)</label>
-				<textarea name="message"></textarea>
-			</div>
-			<div class="ui divider"></div>
-			<div class="field">
-				<div class="ui checkbox">
-					<input name="tos" type="checkbox">
-					<label>Я соглашаюсь с фактом того, что администрация вправе отозвать регистрацию приложения без объяснения причин.</label>
+			<div class="ui bottom attached segment">
+				<div class="grouped fields">
+					<label for="alone">Служебное приложение</label>
+					<div class="field">
+						<div class="ui radio checkbox checked">
+							<input name="internal" type="radio" value="true">
+							<label>Да</label>
+						</div>
+					</div>
+					<div class="field">
+						<div class="ui radio checkbox">
+							<input name="internal" type="radio" value="false">
+							<label>Нет</label>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="ui primary big button" id="gc-registerbutton">Отправить</div>
+			<div class="ui primary big button" id="gc-newbutton">Отправить</div>
 			<input type="hidden" name="_csrf" value="<%= _csrf %>" />
 		</div>
 	</form>

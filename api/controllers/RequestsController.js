@@ -43,6 +43,10 @@ module.exports = {
 
 	/* POST /apps/register */
 	register: function (req, res) {
+		if (!req.param('name') || !req.param('description') || !req.param('redirectURI') || !req.param('homeURI') || !req.param('message')) {
+			return res.badRequest();
+		}
+
 		var newRequest = {
 				id: parseInt(req.param('id'), 10),
 				name: validator.escape(req.param('name')),
@@ -144,11 +148,6 @@ module.exports = {
 		});
 	},
 
-	/* GET /apps/register/success */
-	success: function (req, res) {
-		var message = req.flash('info');
-	},
-
 	/* GET /apps/requests/:id */
 	get: function (req, res) {
 		Requests.findOne(parseInt(req.param('id'), 10)).exec(function (err, result) {
@@ -160,6 +159,10 @@ module.exports = {
 
 	/* POST /apps/requests/:id */
 	edit: function (req, res) {
+		if (!req.param('name') || !req.param('description') || !req.param('redirectURI') || !req.param('homeURI') || !req.param('message')) {
+			return res.badRequest();
+		}
+
 		var newRequest = {
 				id: parseInt(req.param('id'), 10),
 				name: validator.escape(req.param('name')),
@@ -258,6 +261,10 @@ module.exports = {
 
 	/* POST /apps/requests/:id/status */
 	changeStatus: function (req, res) {
+		if (!req.param('status')) {
+			return res.badRequest();
+		}
+
 		var requestId = parseInt(req.param('id'), 10),
 			status = parseInt(req.param('status'), 10);
 

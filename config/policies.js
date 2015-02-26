@@ -25,7 +25,9 @@ module.exports.policies = {
 		'get': 'ownerNStaff',
 		'edit': 'ownerNStaff',
 		'regenerateKey': 'ownerNStaff',
-		'delete': 'ownerNStaff'
+		'delete': 'ownerNStaff',
+		'newView': 'staffOnly',
+		'new': 'staffOnly'
 	},
 
 	'Requests': {

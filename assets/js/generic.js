@@ -565,4 +565,56 @@ $(document).ready(function () {
 			}
 		});
 	});
+
+	$(document).on('click', '#gc-newbutton', function (e) {
+		$.ajax({
+			type: "POST",
+			url: '/apps/new',
+			data: $('#gc-newform').serialize(),
+			error: function (data) {
+				$('#gc-registerform .ui.form').addClass('error');
+
+				$('#gc-registerform #errormessage').html('Произошла неизвестная ошибка, сообщите пожалуйста разработчику');
+			},
+			success: function (data) {
+				console.log(data);
+				if (data.message === 'ERROR') {
+					$('#gc-registerform .ui.form').addClass('error');
+
+					var message = "";
+
+					switch (data.problemIn) {
+						case 'name':
+							message = 'Неправильный размер названия. Не более 100 символов и не менее одного символа.';
+							break;
+
+						case 'description':
+							message = 'Неправильный размер краткого описания. Не более 100 символов и не менее одного символа.';
+							break;
+
+						case 'redirectURI':
+							message = 'Некорректный URL в поле Callback';
+							break;
+
+						case 'homeURI':
+							message = 'Некорректный URL в поле домашней страницы';
+							break;
+
+						case 'scope':
+							message = 'Выберите, хотя бы, одно право';
+							break;
+
+						default:
+							message = 'Произошла неизвестная ошибка, сообщите пожалуйста разработчику';
+					}
+
+					$('#gc-registerform #errormessage').html(message);
+				}
+
+				if (data.message === 'OK') {
+					window.location = '/';
+				}
+			}
+		});
+	});
 });

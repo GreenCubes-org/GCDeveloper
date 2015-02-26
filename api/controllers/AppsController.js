@@ -179,6 +179,10 @@ module.exports = {
 
 	/* POST /apps/:id */
 	edit: function (req, res) {
+		if (!req.param('name') || !req.param('description') || !req.param('redirectURI') || !req.param('homeURI')) {
+			return res.badRequest();
+		}
+
 		var newApp = {
 				id: parseInt(req.param('id'), 10),
 				name: validator.escape(req.param('name')),
@@ -259,8 +263,6 @@ module.exports = {
 					'`scope` = "' + newApp.scope + '"' +
 					'WHERE `id` = ' + newApp.id;
 
-				console.log(query);
-
 				gcdb.apidb.query(query, function (err, result) {
 					if (err) return callback(err);
 
@@ -305,6 +307,10 @@ module.exports = {
 
 	/* POST /apps/:id/changeowner */
 	changeOwner: function (req, res) {
+		if (!req.param('owner')) {
+			return res.badRequest();
+		}
+
 		var newOwner = {
 				id:	null,
 				login: req.param('newOwner').replace(/[^a-zA-Z0-9_-]/g, '')
@@ -391,6 +397,142 @@ module.exports = {
 			if (err) return res.serverError(err);
 
 			req.flash('info', 'Приложение &laquo;' + client.name + '&raquo; успешно удалено');
+
+			res.json({
+				message: 'OK'
+			});
+		});
+	},
+
+	/* GET /apps/new */
+	newView: function (req, res) {
+		res.view('apps/new');
+	},
+
+	/* POST /apps/new */
+	new: function (req, res) {
+		if (!req.param('name') || !req.param('description') || !req.param('redirectURI') || !req.param('homeURI') || !req.param('owner') || !req.param('internal')) {
+			return res.badRequest();
+		}
+
+		var request = {
+				id: parseInt(req.param('id'), 10),
+				name: validator.escape(req.param('name')),
+				description: validator.escape(req.param('description')),
+				redirectURI: req.param('redirectURI'),
+				homeURI: req.param('homeURI'),
+				scope: [],
+				internal: (req.param('internal') === 'true') ? 1 : 0,
+				owner: req.param('owner').replace(/[^a-zA-Z0-9_-]/g, '')
+			},
+			httpValidatorOptions = {
+				require_protocol: true
+			};
+
+		async.waterfall([
+			function checkInput(callback) {
+				if (!validator.isLength(request.name, 1, 100)) {
+					return res.json({
+						message: 'ERROR',
+						problemIn: 'name'
+					});
+				}
+
+				if (!validator.isLength(request.description, 1, 100)) {
+					return res.json({
+						message: 'ERROR',
+						problemIn: 'description'
+					});
+				}
+
+				if (!validator.isURL(request.redirectURI, httpValidatorOptions)) {
+					return res.json({
+						message: 'ERROR',
+						problemIn: 'redirectURI'
+					});
+				}
+
+				if (!validator.isURL(request.homeURI, httpValidatorOptions)) {
+					return res.json({
+						message: 'ERROR',
+						problemIn: 'homeURI'
+					});
+				}
+
+				if (req.body.all === 'on') {
+					request.scope = '*';
+				} else {
+					if (req.param('profile') === 'on') {
+						request.scope.push('profile');
+					}
+
+					if (req.param('email') === 'on') {
+						request.scope.push('email');
+					}
+
+					if (req.param('regions') === 'on') {
+						request.scope.push('regions');
+					}
+
+					request.scope = request.scope.join(',');
+
+					if (!request.scope.length) {
+						return res.json({
+							message: 'ERROR',
+							problemIn: 'scope'
+						});
+					}
+				}
+
+				callback(null, request);
+			},
+			function getOwner(request, callback) {
+				gcdb.user.getByLogin(request.owner, 'sitedb', function (err, uid) {
+					if (err) return callback(err);
+
+					request.owner = uid;
+
+					callback(null, request);
+				});
+			},
+			function registerApp(request, callback) {
+				request.clientSecret = generateUID(64);
+
+				var query = 'INSERT INTO `GCAPI`.`client` (`name`, `clientSecret`, `redirectURI`, `scope`, `homeURI`, `owner`, `description`, `createdAt`, `updatedAt`, `internal`)' +
+					'VALUES (' +
+					'"' + request.name + '",' +
+					'"' + request.clientSecret + '",' +
+					'"' + request.redirectURI + '",' +
+					'"' + request.scope + '",' +
+					'"' + request.homeURI + '",' +
+					'"' + request.owner + '",' +
+					'"' + request.description + '",' +
+					'NOW(),' +
+					'NOW(),' +
+					'"' + request.internal + '");';
+
+				gcdb.apidb.query(query, function (err, result) {
+					if (err) return callback(err);
+
+					callback(null, request);
+				});
+			}
+		], function (err, request) {
+			if (err) return res.serverError(err);
+
+			var message;
+
+			message = 'Приложение &laquo;' + request.name + '&raquo; успешно зарегистрировано.<br><h3>Данные:</h3><pre><code>' +
+				'Название: &laquo;' + request.name + '&raquo;\n' +
+				'Краткое описание: &laquo;' + request.description + '&raquo;\n' +
+				'Домашняя страница: &laquo;' + request.homeURI + '&raquo;\n' +
+				'Callback: &laquo;' + request.redirectURI + '&raquo;\n' +
+				'Права: &laquo;' + request.scope + '&raquo;\n' +
+				'Секретный ключ: &laquo;' + request.clientSecret + '&raquo;\n' +
+				((request.internal) ? 'Приложение служебное.' : '') +
+				'</code></pre>';
+
+			req.flash('info', message);
 
 			res.json({
 				message: 'OK'

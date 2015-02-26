@@ -16,7 +16,10 @@
 					<i class="dropdown icon"></i>
 					<div class="menu">
 						<div class="item"><a href="/apps"><i class="code icon"></i> Ваши приложения</a></div>
-						<div class="item"><a href="/sessions"><i class="unlock alternate icon"></i> Сессии</a></div>
+						<% if (req.user.staff) { %>
+						<div class="item"><a href="/apps/new"><i class="terminal icon"></i> Регистрация приложения</a></div>
+						<% } %>
+						<% /* <div class="item"><a href="/sessions"><i class="unlock alternate icon"></i> Сессии</a></div> */ %>
 					</div>
 				</div>
 			</div>

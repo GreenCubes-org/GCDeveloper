@@ -65,6 +65,9 @@ module.exports.routes = {
 	/* Applications */
 	'/apps': 'apps.list',
 
+	'get /apps/new': 'apps.newView',
+	'post /apps/new': 'apps.new',
+
 	'get /apps/:id': 'apps.get',
 	'post /apps/:id': 'apps.edit',
 	'post /apps/:id/regeneratekey': 'apps.regenerateKey',
@@ -72,7 +75,7 @@ module.exports.routes = {
 	'delete /apps/:id': 'apps.delete',
 
 
-	/* Sessions */
+	/* Sessions * /
 	'/sessions': 'sessions.list',
-	'/sessions/:id': 'sessions.delete'
+	'/sessions/:id': 'sessions.delete'*/
 };
