@@ -10,7 +10,7 @@ module.exports = function (req, res, ok) {
 		if (req.wantsJSON) {
 			res.json(403, {error: 403});
 		} else {
-			res.redirect('/login?errcode=1');
+			res.redirect('/login');
 		}
 	}
 };
