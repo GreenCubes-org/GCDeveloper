@@ -21,10 +21,12 @@ module.exports.policies = {
 	'*': true,
 
 	'Apps': {
-		'*': 'authenticated',
+		'*': false,
+		'list': 'authenticated',
 		'get': 'ownerNStaff',
 		'edit': 'ownerNStaff',
 		'regenerateKey': 'ownerNStaff',
+		'changeOwner': 'ownerNStaff',
 		'delete': 'ownerNStaff',
 		'newView': 'staffOnly',
 		'new': 'staffOnly'
