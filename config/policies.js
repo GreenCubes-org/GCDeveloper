@@ -32,7 +32,8 @@ module.exports.policies = {
 
 	'Requests': {
 		'*': 'staffOnly',
-		'registerView': 'authenticated'
+		'registerView': 'authenticated',
+		'register': 'authenticated',
 	},
 
 	'UsersController': {

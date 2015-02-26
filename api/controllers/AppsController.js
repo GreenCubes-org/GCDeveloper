@@ -522,7 +522,7 @@ module.exports = {
 
 			var message;
 
-			message = 'Приложение &laquo;' + request.name + '&raquo; успешно зарегистрировано.<br><h3>Данные:</h3><pre><code>' +
+			message = 'Приложение &laquo;' + request.name + '&raquo; успешно зарегистрировано.<br><h3>Данные:</h3><pre><code class="nohighlight">' +
 				'Название: &laquo;' + request.name + '&raquo;\n' +
 				'Краткое описание: &laquo;' + request.description + '&raquo;\n' +
 				'Домашняя страница: &laquo;' + request.homeURI + '&raquo;\n' +
