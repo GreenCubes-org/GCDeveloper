@@ -28,7 +28,7 @@
     "validator": "3.4.*",
     "express-validator": "0.8.*",
     "moment": "2.9.x",
-    "private-repo": "git+ssh://git@github.com:GreenCubes/node-gcdb.git#v0.1.0"
+    "private-repo": "git+ssh://git@github.com:GreenCubes/node-gcdb.git#master"
   },
   "scripts": {
     "start": "node app.js",
