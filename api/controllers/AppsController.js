@@ -259,7 +259,7 @@ module.exports = {
 					'`description` = ' + gcdb.escape(newApp.description) + ',' +
 					'`redirectURI` = ' + gcdb.escape(newApp.redirectURI) + ',' +
 					'`homeURI` = ' + gcdb.escape(newApp.homeURI) + ',' +
-					((typeof newApp.internal !== 'number') ? '`internal` = ' +  newApp.internal + ',' : '') +
+					((typeof newApp.internal === 'number') ? '`internal` = ' +  newApp.internal + ',' : '') +
 					'`scope` = "' + newApp.scope + '"' +
 					'WHERE `id` = ' + newApp.id;
 
@@ -307,7 +307,7 @@ module.exports = {
 
 	/* POST /apps/:id/changeowner */
 	changeOwner: function (req, res) {
-		if (!req.param('owner')) {
+		if (!req.param('newOwner')) {
 			return res.badRequest();
 		}
 
