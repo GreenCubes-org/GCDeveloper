@@ -2,3 +2,4 @@
 config/local.js
 .tmp
 node_modules
+npm-debug.log
