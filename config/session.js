@@ -26,10 +26,10 @@ module.exports.session = {
 	},
 
 	adapter: 'redis',
-	host: 'localhost',
-	port: 6379,
+	host: appConfig.db.redis.host,
+	port: appConfig.db.redis.port,
 	ttl: sessionTTLInSeconds,
-	db: 0,
+	db: appConfig.db.redis.db.session,
 	prefix: 'sess:'
 
 };
