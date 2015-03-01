@@ -9,7 +9,7 @@
  * http://sailsjs.org/#/documentation/reference/sails.config/sails.config.bootstrap.html
  */
 
-var GCDB = require('../../node-gcdb'),//require('gcdb'),
+var GCDB = require('gcdb'),//require('gcdb'),
 	mysql = require('mysql');
 
 module.exports.bootstrap = function (cb) {
