@@ -294,13 +294,13 @@ module.exports = {
 
 					var query = 'INSERT INTO `client` (`name`, `clientSecret`, `redirectURI`, `scope`, `homeURI`, `owner`, `description`, `createdAt`, `updatedAt`, `internal`)' +
 						'VALUES (' +
-						'"' + gcdb.escape(request.name) + '",' +
+						gcdb.escape(request.name) + ',' +
 						'"' + request.clientSecret + '",' +
-						'"' + gcdb.escape(request.redirectURI) + '",' +
+						gcdb.escape(request.redirectURI) + ',' +
 						'"' + request.scope + '",' +
-						'"' + gcdb.escape(request.homeURI) + '",' +
+						gcdb.escape(request.homeURI) + ',' +
 						'"' + request.owner + '",' +
-						'"' + gcdb.escape(request.description) + '",' +
+						gcdb.escape(request.description) + ',' +
 						'NOW(),' +
 						'NOW(),' +
 						'"0");';

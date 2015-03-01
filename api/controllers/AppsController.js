@@ -255,12 +255,12 @@ module.exports = {
 			},
 			function writeNewApp(newApp, callback) {
 				var query = 'UPDATE `client` SET ' +
-					'`name` = "' + gcdb.escape(newApp.name) + '",' +
-					'`description` = "' + gcdb.escape(newApp.description) + '",' +
-					'`redirectURI` = "' + gcdb.escape(newApp.redirectURI) + '",' +
-					'`homeURI` = "' + gcdb.escape(newApp.homeURI) + '",' +
+					'`name` = ' + gcdb.escape(newApp.name) + ',' +
+					'`description` = ' + gcdb.escape(newApp.description) + ',' +
+					'`redirectURI` = ' + gcdb.escape(newApp.redirectURI) + ',' +
+					'`homeURI` = ' + gcdb.escape(newApp.homeURI) + ',' +
 					((typeof newApp.internal !== 'number') ? '`internal` = ' +  newApp.internal + ',' : '') +
-					'`scope` = "' + gcdb.escape(newApp.scope) + '"' +
+					'`scope` = "' + newApp.scope + '"' +
 					'WHERE `id` = ' + newApp.id;
 
 				gcdb.apidb.query(query, function (err, result) {
@@ -500,13 +500,13 @@ module.exports = {
 
 				var query = 'INSERT INTO `client` (`name`, `clientSecret`, `redirectURI`, `scope`, `homeURI`, `owner`, `description`, `createdAt`, `updatedAt`, `internal`)' +
 					'VALUES (' +
-					'"' + gcdb.escape(request.name) + '",' +
+					gcdb.escape(request.name) + ',' +
 					'"' + request.clientSecret + '",' +
-					'"' + gcdb.escape(request.redirectURI) + '",' +
+					gcdb.escape(request.redirectURI) + ',' +
 					'"' + request.scope + '",' +
-					'"' + gcdb.escape(request.homeURI) + '",' +
+					gcdb.escape(request.homeURI) + ',' +
 					'"' + request.owner + '",' +
-					'"' + gcdb.escape(request.description) + '",' +
+					gcdb.escape(request.description) + ',' +
 					'NOW(),' +
 					'NOW(),' +
 					'"' + request.internal + '");';
