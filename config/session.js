@@ -30,6 +30,7 @@ module.exports.session = {
 	port: appConfig.db.redis.port,
 	ttl: sessionTTLInSeconds,
 	db: appConfig.db.redis.db.session,
+	pass: appConfig.db.redis.pass,
 	prefix: 'sess:'
 
 };
