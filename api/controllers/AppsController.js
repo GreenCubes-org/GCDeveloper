@@ -244,7 +244,7 @@ module.exports = {
 
 				newApp.scope = newApp.scope.join(',');
 
-				if (!newRequest.scope.length) {
+				if (!newApp.scope.length) {
 					return res.json({
 						message: 'ERROR',
 						problemIn: 'scope'
