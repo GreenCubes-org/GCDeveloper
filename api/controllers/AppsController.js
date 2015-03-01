@@ -498,7 +498,7 @@ module.exports = {
 			function registerApp(request, callback) {
 				request.clientSecret = generateUID(64);
 
-				var query = 'INSERT INTO `GCAPI`.`client` (`name`, `clientSecret`, `redirectURI`, `scope`, `homeURI`, `owner`, `description`, `createdAt`, `updatedAt`, `internal`)' +
+				var query = 'INSERT INTO `client` (`name`, `clientSecret`, `redirectURI`, `scope`, `homeURI`, `owner`, `description`, `createdAt`, `updatedAt`, `internal`)' +
 					'VALUES (' +
 					'"' + request.name + '",' +
 					'"' + request.clientSecret + '",' +
